@@ -11,10 +11,10 @@ function ImageBanner() {
 
       <div className="row d-flex align-items-center p-5">
 
-        <div className="col-12 col-lg-6 hometext">
-          <p className='mb-1 text-warning'>BEST ON FITNESS & WELLNESS</p>
-          <p className='fw-bolder text-light'>Welcome to Your Personal Fitness Journey
-            Stay Motivated, Stay Strong, Stay Consistent.</p>
+        <div className="col-12 col-lg-6 hometext p-3">
+          <h3 className='mb-1 text-warning'>BEST ON FITNESS & WELLNESS</h3>
+          <h3 className='fw-bolder text-light'>Welcome to Your Personal Fitness Journey
+            Stay Motivated, Stay Strong, Stay Consistent.</h3>
 
         </div>
         <div className="col-lg-6 d-none d-lg-flex justify-content-center align-items-center gap-1 ">
@@ -23,12 +23,12 @@ function ImageBanner() {
           <img src={image2} alt="" style={{ width: '275px' }} className='rounded shadow' />
         </div>
 
-        <div className="col-12 col-lg-11 hometext text-end mt-5">
-          <p className="mb-1 text-success">YOUR DAILY FITNESS COMPANION</p>
-          <p className="fw-bolder text-light">
+        <div className="col-12 col-lg-11 hometext text-end mt-5 p-3">
+          <h3 className="mb-1 text-success">YOUR DAILY FITNESS COMPANION</h3>
+          <h3 className="fw-bolder text-light">
             Transform Your Body and Mind<br />
             One Workout at a Time. Track Progress, Build Discipline, Feel the Change.
-          </p>
+          </h3>
         </div>
 
         <hr className="w-100 border-top border-white" />
