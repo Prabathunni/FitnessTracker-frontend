@@ -9,7 +9,7 @@ import { useAuth } from '../contexts/AuthContext'
 function Auth() {
 
 
-  const {showPopUp, setShowPopUp} = useAuth()
+  const { showPopUp, setShowPopUp } = useAuth()
   const [isRegister, setIsRegister] = useState(true)
 
 
@@ -34,7 +34,7 @@ function Auth() {
             <div className={`${styles.authdiv} d-flex flex-column`}>
 
               <div className='text-end'>
-                <button style={{ width: "35px" }} className='btn text-white' onClick={()=>setShowPopUp(false)}>
+                <button style={{ width: "35px" }} className='btn text-white' onClick={() => setShowPopUp(false)}>
                   <ImCross />
                 </button>
 
@@ -59,7 +59,13 @@ function Auth() {
 
                   <h4 className='fw-bolder text-center mb-3 text-white'>Register</h4>
                   <form onSubmit={registerUser}>
+
                     <input type="text" placeholder="Enter your username" className="form-control mb-3" required />
+
+                    <input type="email" placeholder="Enter your email" className="form-control mb-3" required />
+
+                    <input type="password" placeholder="Enter your password" className="form-control mb-3" required />
+
 
                     <input type="number" placeholder="Enter your age" className="form-control mb-3" min="1" required />
 
@@ -75,9 +81,21 @@ function Auth() {
                       <option value="other">Other</option>
                     </select>
 
-                    <input type="email" placeholder="Enter your email" className="form-control mb-3" required />
 
-                    <input type="password" placeholder="Enter your password" className="form-control mb-3" required />
+                    <select className="form-control mb-3" required>
+                      <option value="" disabled selected>Activity level</option>
+                      <option value="notActive">not Active</option>
+                      <option value="moderate">moderate</option>
+                      <option value="intense">Intense</option>
+                    </select>
+
+                    <select className="form-control mb-3" required>
+                      <option value="" disabled selected>Goal</option>
+                      <option value="weightGain">Weight Gain</option>
+                      <option value="weightLoss">Weight Loss</option>
+                      <option value="maintainWeight">Maintain weight</option>
+                    </select>
+
 
                     <input type="submit" value="Register" className="btn btn-success w-100 mb-3" />
 
@@ -99,7 +117,7 @@ function Auth() {
             <div className={`${styles.authdiv} d-flex flex-column`}>
 
               <div className='text-end'>
-                <button style={{ width: "35px" }} className='btn text-white' onClick={()=>setShowPopUp(false)}>
+                <button style={{ width: "35px" }} className='btn text-white' onClick={() => setShowPopUp(false)}>
                   <ImCross />
                 </button>
 
