@@ -65,8 +65,8 @@ function ImageBanner() {
 
             <img style={{ width: "30px", height: "30px" }} className='ms-2' src="https://images.icon-icons.com/2415/PNG/512/mongodb_original_logo_icon_146424.png" alt="" />
             <img style={{ width: "30px", height: "30px" }} className='ms-2' src="https://img.icons8.com/nolan/512/express-js.png" alt="" />
-            <i class="fa-brands fa-react fa-xl text-primary ms-2"></i>
-            <i class="fa-brands fa-node fa-xl ms-2 text-warning"></i>
+            <i className="fa-brands fa-react fa-xl text-primary ms-2"></i>
+            <i className="fa-brands fa-node fa-xl ms-2 text-warning"></i>
 
 
 
