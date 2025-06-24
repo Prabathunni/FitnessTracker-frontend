@@ -1,15 +1,36 @@
 import React from 'react'
 import { Badge, Button, Dropdown } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Auth from './Auth'
 import { useAuth } from '../contexts/AuthContext'
+import { logoutUserApi } from '../services/userServices'
+
 
 function Header() {
 
   const {isUserLogged, setIsUserLogged} = useAuth()
+  const {showPopUp, setShowPopUp} = useAuth()
+  const navigate = useNavigate()
 
 
- const {showPopUp, setShowPopUp} = useAuth()
+  const logoutUser = async()=>{
+    console.log("button clicked");
+    
+    try {
+
+      await logoutUserApi()
+      alert("logged Out")
+      setIsUserLogged(false)
+      navigate('/')
+      
+    } catch (error) {
+      console.log("logging out failed",error);
+      
+    }
+  }
+
+
+  
 
   return (
     <div className='container rounded d-flex  justify-content-center gap-5 flex-row  p-3 align-items-center'>
@@ -30,12 +51,12 @@ function Header() {
                 width="40"
                 height="40"
                 className="rounded-circle"
-              /> <span></span>  Logout
+              /> <span className='px-1'> Hello Username</span>  
             </Dropdown.Toggle>
 
             <Dropdown.Menu className='p-2 text-center'>
               <Link to={'/profile'} className='btn btn-outline-secondary w-100 mb-2 text-dark'><i class="fa-solid fa-user"></i> My Profile</Link>
-              <Link className='btn btn-danger w-100 text-light'><i class="fa-solid fa-gear"></i> Logout</Link>
+              <button onClick={logoutUser} className='btn btn-danger w-100 text-light'><i class="fa-solid fa-gear"></i> Logout</button>
 
             </Dropdown.Menu>
           </Dropdown>

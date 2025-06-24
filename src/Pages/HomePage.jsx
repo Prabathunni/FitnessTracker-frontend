@@ -6,6 +6,7 @@ import { useAuth } from '../contexts/AuthContext';
 import VideoBanner from '../Components/VideoBanner';
 import ImageBanner from '../Components/ImageBanner';
 import Auth from '../Components/Auth';
+import { verifyTokenAPI } from '../services/userServices';
 
 
 
@@ -14,6 +15,40 @@ function HomePage() {
 
     const { isUserLogged, setIsUserLogged } = useAuth();
     const { showPopUp, setShowPopUp } = useAuth()
+
+
+      useEffect(() => {
+    
+        const checkVerifyToken = async () => {
+          try {
+    
+            const valid = await verifyTokenAPI()
+            console.log(valid);
+            
+    
+            if (valid) {
+              setIsUserLogged(true)
+            } else{
+              setIsUserLogged(false)
+            }
+            
+    
+    
+          } catch (error) {
+              console.log(error);
+              setIsUserLogged(false)
+          }
+        }
+    
+        
+    
+        checkVerifyToken()
+    
+    
+    
+      }, [])
+    
+    
 
 
 
