@@ -2,7 +2,7 @@ import React from 'react'
 
 function AdminPage() {
   return (
-    <div className='bg-danger vh-100'>
+    <div className='bg-danger' style={{ minHeight: "100vh" }}>
 
       <div className='d-flex flex-column align-items-center justify-content-center p-4'>
 
@@ -41,6 +41,22 @@ function AdminPage() {
                 </tr>
               </tbody>
             </table>
+          </div>
+        </div>
+
+
+        <div className="bg-light container p-2 rounded" style={{ marginTop: "50px", minHeight: "130px" }}>
+          <h2 className='text-danger'>Muscle Groups</h2>
+          <div className='d-flex flex-column flex-md-row align-items-center'>
+            <div className='w-50'>
+              <form className='d-flex flex-column flex-md-row gap-3'>
+                <input type="text" className='form-control' placeholder='muscle group name' />
+                <input type="text" className='form-control' placeholder='image address here for workout' />
+                <input type="submit" className='btn btn-primary' value="Add +" />
+              </form>
+            </div>
+
+
           </div>
         </div>
 

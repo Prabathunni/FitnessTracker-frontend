@@ -55,30 +55,7 @@ function HomePage() {
     const [workout, setWorkout] = useState([])
 
     const getWorkout = () => {
-        const temp = [{
-            "type": "Chest",
-            "imageUrl": "https://www.seannal.com/images/upper-chest.jpg"
-        },
-        {
-            "type": "Triceps",
-            "imageUrl": "https://cdn-wp.thesportsrush.com/2023/12/9327ad8e-cbum1.jpg?format=auto&w=3840&q=75"
-        },
-        {
-            "type": "Shoulder",
-            "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBvO13-w4UL0Hj77d0mJi38-owvb82lS586CyTxIGxo2szhH3W68SVDzXFinPcxVOEoxg&usqp=CAU"
-        },
-        {
-            "type": "Back",
-            "imageUrl": "https://global.discourse-cdn.com/tnation/uploads/default/original/2X/7/7f77fc004645dfadc8e849ac324ce98623e2fa2b.jpg"
-        },
-        {
-            "type": "Biceps",
-            "imageUrl": "https://live.staticflickr.com/2448/4059857751_426fda93ee_w.jpg"
-        },
-        {
-            "type": "Leg",
-            "imageUrl": "https://thebodybuildingarchive.com/wp-content/uploads/2023/04/TomPlatz_PerfectForm.jpg"
-        },
+        const temp = [
         {
             "type": "ABS",
             "imageUrl": "https://i.pinimg.com/474x/c4/df/35/c4df35aca0bec13d16319c19503dca78.jpg"
