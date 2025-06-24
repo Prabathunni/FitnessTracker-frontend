@@ -15,3 +15,16 @@ export const registerAPI = async(userData) =>{
              
     }
 }
+
+
+export const loginAPI = async(credentials)=>{
+    try {
+
+        const response = await axios.post(`${serverURL}/login`, credentials)
+        return response.data
+        
+    } catch (error) {
+        console.log(error);    
+        
+    }
+}

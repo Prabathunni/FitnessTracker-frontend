@@ -137,13 +137,13 @@ dd {
 }
 
 /* Responsive height for smaller screens */
-@media (max-width: 576px) {
+@media (max-width: 786px) {
   .MuscleCard {
     height: 150px;
     max-width: 48%;
   }
   .MuscleCard:hover {
-  transform: scale(2.03);
+  transform: scale(1.03);
 }
 }
 

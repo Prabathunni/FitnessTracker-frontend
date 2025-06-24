@@ -4,13 +4,16 @@ import styles from './Auth.module.css'
 import logo from '/heart-rate.png'
 import { ImCross } from 'react-icons/im'
 import { useAuth } from '../contexts/AuthContext'
-import { registerAPI } from '../services/userServices'
+import { loginAPI, registerAPI } from '../services/userServices'
 
 
 function Auth() {
 
 
   const { showPopUp, setShowPopUp } = useAuth()
+  const {isUserLogged, setIsUserLogged} = useAuth()
+
+
   const [isRegister, setIsRegister] = useState(true)
 
 
@@ -75,8 +78,31 @@ function Auth() {
 
   }
 
-  const loginUser = () => {
-    console.log("clicked loginuser");
+  const loginUser = async(e) => {
+    e.preventDefault()
+
+    const credentials = {
+      email,
+      password
+    }
+
+    try {
+
+      const result = await loginAPI(credentials)
+      console.log(result);
+      resetForm()
+      setIsUserLogged(true)
+      setShowPopUp(false)
+      alert("login successfull")
+      
+      
+    } catch (error) {
+      console.log("login unsuccessfull", error);
+      
+      
+    }
+
+    
 
   }
 
@@ -199,9 +225,8 @@ function Auth() {
                   <h4 className='fw-bolder text-center mb-3 text-white'>Login</h4>
                   <form onSubmit={loginUser}>
 
-                    <input type="email" placeholder="Enter your email" class="form-control mb-3" required />
-
-                    <input type="password" placeholder="Enter your password" class="form-control mb-3" required />
+                    <input type="email" placeholder="Enter your email" value={email} onChange={e=>setEmail(e.target.value)} class="form-control mb-3" required />
+                    <input type="password" placeholder="Enter your password" value={password} onChange={e=>setPassword(e.target.value)} class="form-control mb-3" required />
 
                     <input type="submit" value="Login" class="btn btn-success w-100 mb-3" />
 
