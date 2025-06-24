@@ -12,6 +12,7 @@ export const registerAPI = async(userData) =>{
         
     } catch (error) {
         console.log(error);
+        throw error
              
     }
 }
@@ -26,7 +27,8 @@ export const loginAPI = async(credentials)=>{
         return response.data
         
     } catch (error) {
-        console.log(error);    
+        console.log("Status:",error.response.status, error.response.data);
+        throw error
         
     }
 }
@@ -42,6 +44,7 @@ export const verifyTokenAPI = async () =>{
     } catch (error) {
 
         console.log(error);
+        throw error
         
         
     }
@@ -57,6 +60,7 @@ export const logoutUserApi = async()=>{
         
     } catch (error) {
         console.log(error);
+        throw error
         
     }
 }

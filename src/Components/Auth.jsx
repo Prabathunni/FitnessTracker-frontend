@@ -69,7 +69,7 @@ function Auth() {
     } catch (error) {
 
       console.log(error);
-      alert("Failed to Register...")
+      alert(error.response.data)
 
 
     }
@@ -78,6 +78,8 @@ function Auth() {
 
   }
 
+
+  // ------login user
   const loginUser = async (e) => {
     e.preventDefault()
 
@@ -89,17 +91,20 @@ function Auth() {
     try {
 
       const result = await loginAPI(credentials)
-      console.log(result);
-      resetForm()
-      setIsUserLogged(true)
-      setShowPopUp(false)
-      alert("login successfull")
+
+      if (result) {
+        resetForm()
+        setIsUserLogged(true)
+        setShowPopUp(false)
+        alert("login successfull")
+      }else{
+        alert("Login Failed")
+      }
 
 
 
     } catch (error) {
-      console.log("login unsuccessfull", error);
-
+      alert(error.response.data)
 
     }
 
