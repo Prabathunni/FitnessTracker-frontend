@@ -6,7 +6,7 @@ import { useAuth } from '../contexts/AuthContext';
 import VideoBanner from '../Components/VideoBanner';
 import ImageBanner from '../Components/ImageBanner';
 import Auth from '../Components/Auth';
-import { verifyTokenAPI } from '../services/userServices';
+import { getAllMuscleAPI, verifyTokenAPI } from '../services/userServices';
 
 
 
@@ -16,58 +16,48 @@ function HomePage() {
     const { isUserLogged, setIsUserLogged } = useAuth();
     const { showPopUp, setShowPopUp } = useAuth()
 
-
-      useEffect(() => {
-    
-        const checkVerifyToken = async () => {
-          try {
-    
-            const valid = await verifyTokenAPI()
-            console.log(valid);
-            
-    
-            if (valid) {
-              setIsUserLogged(true)
-            } else{
-              setIsUserLogged(false)
-            }
-            
-    
-    
-          } catch (error) {
-              console.log(error);
-              setIsUserLogged(false)
-          }
-        }
-    
-        
-    
-        checkVerifyToken()
-    
-    
-    
-      }, [])
-    
-    
-
-
-
     const [workout, setWorkout] = useState([])
 
-    const getWorkout = () => {
-        const temp = [
-        {
-            "type": "ABS",
-            "imageUrl": "https://i.pinimg.com/474x/c4/df/35/c4df35aca0bec13d16319c19503dca78.jpg"
-        }
-        ]
 
-        setWorkout(temp)
+    const getAllMuscleGroup = async () => {
+        try {
+            const muscleGroupData = await getAllMuscleAPI()
+            const datas = muscleGroupData.data
+            if(datas){
+                setWorkout(datas)
+            }
+            
+
+        } catch (error) {
+            console.log(error)
+        }
     }
 
+
     useEffect(() => {
-        getWorkout();
+
+        const checkVerifyToken = async () => {
+            try {
+
+                const valid = await verifyTokenAPI()
+                if (valid) {
+                    setIsUserLogged(true)
+                } else {
+                    setIsUserLogged(false)
+                }
+
+            } catch (error) {
+                console.log(error.response.data);
+                setIsUserLogged(false)
+            }
+        }
+
+
+        checkVerifyToken()
+        getAllMuscleGroup()
     }, [])
+
+
 
 
 
@@ -100,18 +90,21 @@ function HomePage() {
                     <div>
                         <div>
                             <h2 style={{ fontFamily: '"Press Start 2P", system-ui', marginTop: "100px", fontSize: "50px" }} className='text-center text-white' >
-                                Workout
+                                Muscle Groups
                             </h2>
                         </div>
 
                         <div className='container d-flex flex-wrap flex-column flex-md-row justify-content-center gap-3 align-items-center mt-5 mb-5'>
                             {/* BODY PARTS  */}
 
-                            {workout.map((item, index) => (
+                            {
+                            workout.length>0?
+                            workout.map((item, index) => (
 
                                 <DisplayBodyParts key={index} item={item} />
 
-                            ))
+                            )):
+                            <h4 className='text-danger'> MucleGroups will be added soon... </h4>
                             }
 
                         </div>
