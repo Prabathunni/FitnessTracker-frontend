@@ -10,11 +10,6 @@ import { Button, FloatingLabel, Form, Modal } from 'react-bootstrap'
 function Report() {
 
   // modal
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
-
 
   const [checkReportName, setCheckReportName] = useState()
   const { dataName } = useParams()
@@ -133,7 +128,7 @@ function Report() {
           }
         </div>
 
-
+{/* 
         <div className='section2'>
           {
             dataS1 &&
@@ -232,15 +227,11 @@ function Report() {
           }
         </div>
 
-
+ */}
       </div>
 
 
       <div className='d-flex flex-column gap-4 position-fixed bottom-0 end-0 m-5'>
-
-        <button className="btn btn-success" onClick={handleShow} >
-          Set Target  <i class="fa-solid fa-bullseye"></i>
-        </button>
 
         <button className="btn btn-warning" onClick={() => setShowUpdatePopUp(true)}>
           Update Report <i class="fa-solid fa-file-pen ms-2"></i>
@@ -256,53 +247,6 @@ function Report() {
       {
         showUpdatePopUp && <UpdatePopUp reportName={checkReportName} />
       }
-
-
-      <Modal
-        show={show}
-        onHide={handleClose}
-        backdrop="static"
-        keyboard={false}
-        centered
-      >
-        <Modal.Body>
-
-          <h5 className='text-center mb-2 fw-normal text-danger' style={{letterSpacing:"3px"}}>ADD TARGET</h5>
-          <br />
-
-          <div>
-            <FloatingLabel controlId="floatingInput" label="Calorie Intake" className="mb-3" >
-              <Form.Control type="number" placeholder='' />
-            </FloatingLabel>
-
-            <FloatingLabel controlId="floatingInput" label="Sleep ( Recommended 8-9 hrs )" className="mb-3" >
-              <Form.Control type="number" placeholder='' />
-            </FloatingLabel>
-
-            <FloatingLabel controlId="floatingInput" label="Water Intake (Recommended 3-4L)" className="mb-3" >
-              <Form.Control type="number" placeholder='' />
-            </FloatingLabel>
-
-            <FloatingLabel controlId="floatingInput" label="Weight" className="mb-3" >
-              <Form.Control type="number" placeholder='' />
-            </FloatingLabel>
-
-            <FloatingLabel controlId="floatingInput" label="Workouts (Recommended 6-8)" className="mb-3" >
-              <Form.Control type="number" placeholder='' />
-            </FloatingLabel>
-
-
-          </div>
-
-
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="success">ADD  <i class="fa-solid fa-bullseye ms-1"></i></Button>
-        </Modal.Footer>
-      </Modal>
 
 
 

@@ -47,7 +47,7 @@ function HomePage() {
 
 
     return (
-        <div>
+        <div style={{paddingBottom:"150px"}}>
 
 
             {
