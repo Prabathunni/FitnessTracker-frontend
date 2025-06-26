@@ -11,7 +11,7 @@ function WorkoutLogger() {
   const handleShow = () => setShow(true);
 
 
-  const [workout, setWorkout] = useState({
+  const [workouts, setWorkouts] = useState({
     type: "",
     imageUrl: "",
     durationtime: 0,
@@ -57,7 +57,7 @@ function WorkoutLogger() {
 
 
 
-    setWorkout(data)
+    setWorkouts(data)
 
   }
 
@@ -112,13 +112,13 @@ function WorkoutLogger() {
 
 
   return (
-    <div>
+    <div style={{paddingBottom:"160px"}}>
       <Header />
 
       <div className='d-flex justify-content-center align-items-center' style={{ fontFamily: '"Press Start 2P", system-ui', marginTop: "30px", fontSize: "35px" }}>
 
         <h2 className='text-center text-white' >
-          {workout.type} Workout <span> {workout.exercises.length} </span> 
+          {workouts.type} Workout <span> {workouts.exercises.length} </span> 
         </h2>
       </div>
 
@@ -130,7 +130,7 @@ function WorkoutLogger() {
 
 
       {
-        workout.exercises.map((item, index) => (
+        workouts.exercises.map((item, index) => (
           <div className="container row" key={index} style={{ marginTop: "100px" }}>
             <div className="col-0 col-lg-1"> </div>
             <div className="workout-gif col-12 col-md-6 col-lg-4 d-flex justify-content-center align-items-center">

@@ -3,13 +3,31 @@ import Header from '../Components/Header'
 import { LineChart } from '@mui/x-charts'
 import styles from './ReportPage.module.css'
 import UpdatePopUp from '../Components/UpdatePopUp'
+import { useAuth } from '../contexts/AuthContext'
+import { useParams } from 'react-router-dom'
+import { Button, FloatingLabel, Form, Modal } from 'react-bootstrap'
 
 function Report() {
 
-  const [showUpdatePopUp, setShowUpdatePopUp] = useState(false)
+  // modal
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
+
+
+  const [checkReportName, setCheckReportName] = useState()
+  const { dataName } = useParams()
+  const { showUpdatePopUp, setShowUpdatePopUp } = useAuth()
 
   const [dataS1, setDataS1] = useState()
+
+
+
+  const getCheckReportName = () => {
+    setCheckReportName(dataName)
+  }
+
 
 
   const getChartData = () => {
@@ -42,27 +60,25 @@ function Report() {
       },
     ]
 
-
+    // seting up an array of numeric values for the chart ---y axis values
     let valueForLineChart = datas.map((data) => {
       let value = JSON.stringify(data.value)
       return value
     })
 
-
-    
-
-
-
+    // seting up an array of numeric values for the chart ---x axis values
     let valueForXaxis = datas.map((data) => {
       let value = new Date(data.date);
       return value
     })
 
+
+    //  complete values for the chart
     setDataS1({
       data: valueForLineChart,
       title: "1 Day Calarie Intake",
       xAxis: {
-        data: valueForXaxis, // 18,17,16,15,14
+        data: valueForXaxis, // [18,17,16,15,14]
         label: "Last 5 Days",
         scaleType: "time"
       }
@@ -74,8 +90,8 @@ function Report() {
 
   useEffect(() => {
     getChartData()
+    getCheckReportName()
   }, [])
-
 
 
 
@@ -83,7 +99,7 @@ function Report() {
     <div className={`${styles.reportSection}`}>
       <Header />
 
-      <div className='d-flex flex-wrap justify-content-center'>
+      <div className='d-flex flex-wrap justify-content-center' style={{marginTop:"60px"}}>
 
         <div className='section1'>
           {
@@ -221,9 +237,15 @@ function Report() {
 
 
       <div className='d-flex flex-column gap-4 position-fixed bottom-0 end-0 m-5'>
+
+        <button className="btn btn-success" onClick={handleShow} >
+          Set Target  <i class="fa-solid fa-bullseye"></i>
+        </button>
+
         <button className="btn btn-warning" onClick={() => setShowUpdatePopUp(true)}>
           Update Report <i class="fa-solid fa-file-pen ms-2"></i>
         </button>
+
         <button className="btn btn-primary">
           Analyse <i class="fa-solid fa-magnifying-glass-chart ms-2"></i>
         </button>
@@ -232,8 +254,55 @@ function Report() {
 
 
       {
-        showUpdatePopUp && <UpdatePopUp setShowUpdatePopUp={setShowUpdatePopUp} />
+        showUpdatePopUp && <UpdatePopUp reportName={checkReportName} />
       }
+
+
+      <Modal
+        show={show}
+        onHide={handleClose}
+        backdrop="static"
+        keyboard={false}
+        centered
+      >
+        <Modal.Body>
+
+          <h5 className='text-center mb-2 fw-normal text-danger' style={{letterSpacing:"3px"}}>ADD TARGET</h5>
+          <br />
+
+          <div>
+            <FloatingLabel controlId="floatingInput" label="Calorie Intake" className="mb-3" >
+              <Form.Control type="number" placeholder='' />
+            </FloatingLabel>
+
+            <FloatingLabel controlId="floatingInput" label="Sleep ( Recommended 8-9 hrs )" className="mb-3" >
+              <Form.Control type="number" placeholder='' />
+            </FloatingLabel>
+
+            <FloatingLabel controlId="floatingInput" label="Water Intake (Recommended 3-4L)" className="mb-3" >
+              <Form.Control type="number" placeholder='' />
+            </FloatingLabel>
+
+            <FloatingLabel controlId="floatingInput" label="Weight" className="mb-3" >
+              <Form.Control type="number" placeholder='' />
+            </FloatingLabel>
+
+            <FloatingLabel controlId="floatingInput" label="Workouts (Recommended 6-8)" className="mb-3" >
+              <Form.Control type="number" placeholder='' />
+            </FloatingLabel>
+
+
+          </div>
+
+
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="success">ADD  <i class="fa-solid fa-bullseye ms-1"></i></Button>
+        </Modal.Footer>
+      </Modal>
 
 
 

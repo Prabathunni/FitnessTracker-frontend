@@ -6,6 +6,7 @@ import { AuthProvider } from './contexts/AuthContext'
 import HomePage from './Pages/HomePage'
 import LayoutWithFooter from './Components/LayoutWithFooter'
 import AdminPage from './Pages/AdminPage'
+import AppRoutes from './Routes/AppRoutes'
 
 function App() {
 
@@ -14,20 +15,7 @@ function App() {
 
       <AuthProvider>
 
-
-        <Routes >
-
-          <Route element={<LayoutWithFooter/>}>
-            <Route path='/' element={<HomePage />} />
-            <Route path='/workout/:type' element={<WorkoutLogger />} />
-            <Route path='/report/:reportType' element={<Report />} />
-            <Route path='/profile' element={<Profile />} />
-          </Route>
-
-
-          <Route path='/admin' element={<AdminPage/> }/>
-
-        </Routes>
+        <AppRoutes/>
 
       </AuthProvider>
 

@@ -6,7 +6,7 @@ import { useAuth } from '../contexts/AuthContext';
 import VideoBanner from '../Components/VideoBanner';
 import ImageBanner from '../Components/ImageBanner';
 import Auth from '../Components/Auth';
-import { getAllMuscleAPI, verifyTokenAPI } from '../services/userServices';
+import { getAllMuscleAPI } from '../services/userServices';
 
 
 
@@ -34,27 +34,12 @@ function HomePage() {
     }
 
 
+
+
     useEffect(() => {
 
-        const checkVerifyToken = async () => {
-            try {
-
-                const valid = await verifyTokenAPI()
-                if (valid) {
-                    setIsUserLogged(true)
-                } else {
-                    setIsUserLogged(false)
-                }
-
-            } catch (error) {
-                console.log(error.response.data);
-                setIsUserLogged(false)
-            }
-        }
-
-
-        checkVerifyToken()
         getAllMuscleGroup()
+
     }, [])
 
 

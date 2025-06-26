@@ -93,6 +93,7 @@ function Auth() {
       const result = await loginAPI(credentials)
 
       if (result) {
+        sessionStorage.setItem("userData",result.data.existingUser.name)      
         resetForm()
         setIsUserLogged(true)
         setShowPopUp(false)

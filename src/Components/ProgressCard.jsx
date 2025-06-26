@@ -79,7 +79,9 @@ function ProgressCard() {
                     </div>
 
                     <div className='d-flex align-items-center justify-content-betweeen gap-3'>
+
                         <Link to={`/report/${item.name}`} className='mt-3 btn btn-outline-success text-light'>show report <i className="fa-solid fa-eye"></i></Link>
+                        
                         <div style={{ width: 80, height: 80 }}>
                             <CircularProgressbar
                                 value={(item.value/item.goal)}

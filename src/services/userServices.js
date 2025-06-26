@@ -21,10 +21,10 @@ export const registerAPI = async(userData) =>{
 export const loginAPI = async(credentials)=>{
     try {
 
-        const response = await axios.post(`${server_url}/login`, credentials, {
+        const result = await axios.post(`${server_url}/login`, credentials, {
             withCredentials: true
         })
-        return response.data
+        return result
         
     } catch (error) {
         console.log("Status:",error.response.status, error.response.data);
@@ -44,9 +44,9 @@ export const verifyTokenAPI = async () =>{
 
         console.log(error);
         throw error
-        
-        
+                
     }
+    
 }
 
 

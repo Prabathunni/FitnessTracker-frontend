@@ -8,9 +8,11 @@ export const AuthProvider = ({ children }) => {
 
   const [isUserLogged, setIsUserLogged] = useState(false);
   const [showPopUp, setShowPopUp] = useState(false)
+  const [showUpdatePopUp, setShowUpdatePopUp] = useState(false)
+
 
   return (
-    <AuthContext.Provider value={{ isUserLogged, setIsUserLogged, showPopUp, setShowPopUp }}>
+    <AuthContext.Provider value={{ isUserLogged, setIsUserLogged, showPopUp, setShowPopUp ,showUpdatePopUp, setShowUpdatePopUp}}>
       {children}
     </AuthContext.Provider>
   );

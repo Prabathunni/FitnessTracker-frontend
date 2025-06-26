@@ -7,7 +7,7 @@ const Footer = () => {
     <div className={styles.footerdiv} >
 
 
-      <div className='w-50 d-flex flex-column justify-content-center align-items-center'>
+      <div className='w-50 d-flex flex-column justify-content-center align-items-center' style={{marginTop:"29px"}}>
         <Link className='d-flex text-decoration-none text-white' to={'/'} >
           <img src="/heart-rate.png" className='' style={{ width: "30px", height: "30px" }} alt="logo" />
           <h4>Fitness Tracker</h4>
