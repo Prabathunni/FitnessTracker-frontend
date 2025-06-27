@@ -10,8 +10,8 @@ import { loginAPI, registerAPI } from '../services/userServices'
 function Auth() {
 
 
-  const { showPopUp, setShowPopUp } = useAuth()
-  const { isUserLogged, setIsUserLogged } = useAuth()
+  const { setShowPopUp } = useAuth()
+  const { setIsUserLogged } = useAuth()
 
 
   const [isRegister, setIsRegister] = useState(true)
@@ -93,12 +93,12 @@ function Auth() {
       const result = await loginAPI(credentials)
 
       if (result) {
-        sessionStorage.setItem("userData",result.data.existingUser.name)      
+        sessionStorage.setItem("userData", result.data.existingUser.name)
         resetForm()
         setIsUserLogged(true)
         setShowPopUp(false)
         alert("login successfull")
-      }else{
+      } else {
         alert("Login Failed")
       }
 
@@ -170,10 +170,11 @@ function Auth() {
 
 
                       <select className="form-control mb-3" value={activityLevel} onChange={e => setActivityLevel(e.target.value)} required>
-                        <option value="" disabled selected>Activity level</option>
-                        <option value="notActive">not Active</option>
-                        <option value="moderate">moderate</option>
-                        <option value="intense">Intense</option>
+                        <option value="sedentary">Sedentary — no regular exercise</option>
+                        <option value="light">Light — 1-3 days/week</option>
+                        <option value="moderate">Moderate — 3-5 days/week</option>
+                        <option value="active">Active — 6-7 days/week</option>
+                        <option value="very_active">Very Active — twice a day or physical job</option>
                       </select>
 
                       <select className="form-control mb-3" value={goal} onChange={e => setGoal(e.target.value)} required>
