@@ -42,10 +42,7 @@ function UpdatePopUp({ reportName }) {
                                         <option value="l">Litre</option>
                                     </select>
 
-
-                                    <input type="time" className='form-control mb-3' />
-                                    <input type="date" placeholder='Date of consume' className='form-control mb-3' />
-
+                                    <input type="datetime-local" placeholder='Date of consume' className='form-control mb-3' />
 
                                     <button className='btn btn-success mb-3 form-control'>Update Report</button>
                                 </form>

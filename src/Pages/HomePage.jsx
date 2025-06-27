@@ -13,7 +13,7 @@ import { getAllMuscleAPI } from '../services/userServices';
 
 function HomePage() {
 
-    const { isUserLogged, setIsUserLogged } = useAuth();
+    const { isUserLogged } = useAuth();
     const { showPopUp, setShowPopUp } = useAuth()
 
     const [workout, setWorkout] = useState([])
