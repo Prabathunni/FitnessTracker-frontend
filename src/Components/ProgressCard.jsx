@@ -2,54 +2,30 @@ import React, { useEffect, useState } from 'react';
 import { buildStyles, CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { Link } from 'react-router-dom'
+import { getAllReportAPI } from '../services/userServices';
 
 function ProgressCard() {
 
     const [data, setData] = useState()
 
 
-    const getData = () => {
 
-        const temp = [{
-            "name": "CALORIE INTAKE",
-            "value": 2000,
-            "unit": "KCAL",
-            "goal": 2500,
-            "goalUnit": "KCAL",
-        }, {
-            "name": "SLEEP",
-            "value": 8,
-            "unit": "hrs",
-            "goal": 8,
-            "goalUnit": "hr",
-        }, {
-            "name": "WATER INTAKE",
-            "value": 3,
-            "unit": "litre",
-            "goal": 4,
-            "goalUnit": "litre",
-        }, {
-            "name": "WEIGHT",
-            "value": 60,
-            "unit": "KG",
-            "goal": 70,
-            "goalUnit": "KG",
-        }, {
-            "name": "WORKOUTS",
-            "value": 2,
-            "unit": "workouts",
-            "goal": 6,
-            "goalUnit": "workouts",
+    const getAllReport = async () => {
+        try {
+            const result = await getAllReportAPI()
+            const reportData = result.data.response;
+            setData(reportData)
+
+        } catch (error) {
+            console.log(error.response.data.error);
+
         }
-        ]
-
-        setData(temp)
-
-
     }
 
+
     useEffect(() => {
-        getData()
+        getAllReport()
+
     }, [])
 
 
@@ -81,16 +57,16 @@ function ProgressCard() {
                     <div className='d-flex align-items-center justify-content-betweeen gap-3'>
 
                         <Link to={`/report/${item.name}`} className='mt-3 btn btn-outline-success text-light'>show report <i className="fa-solid fa-eye"></i></Link>
-                        
+
                         <div style={{ width: 80, height: 80 }}>
                             <CircularProgressbar
-                                value={(item.value/item.goal)}
+                                value={(item.value / item.goal)}
                                 maxValue={1}
                                 text={`${item.value}/${item.goal}`}
                                 background
                                 backgroundPadding={6}
                                 styles={buildStyles({
-                                    textSize:"11px",
+                                    textSize: "11px",
                                     backgroundColor: "#113ecb ",
                                     textColor: "#fff",
                                     pathColor: "#fff",

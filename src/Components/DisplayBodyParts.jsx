@@ -23,7 +23,7 @@ function DisplayBodyParts({ item }) {
             >
                 <Link
                     className='btn btn-outline-primary btn-sm text-white'
-                    to={`/workout/${item.type}`}
+                    to={`/workout/${item._id}`}
                     style={{ fontSize: '20px', fontWeight: 'bold', textShadow: '1px 1px 5px rgba(0,0,0,0.7)' }}
                 >
                     {item.type}

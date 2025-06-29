@@ -2,12 +2,51 @@ import React, { useState } from 'react'
 import styles from './Updatepopup.module.css'
 import { ImCross } from 'react-icons/im'
 import { useAuth } from '../contexts/AuthContext';
+import { addCalorieIntakeAPI } from '../services/userServices';
 
 
 function UpdatePopUp({ reportName }) {
-    const {setShowUpdatePopUp } = useAuth()
+    const { setShowUpdatePopUp } = useAuth()
 
-    const [showTargetField, setShowTargetField] = useState(false)
+
+    const [item, setItem] = useState("")
+    const [quantity, setQuantity] = useState()
+    const [unit, setUnit] = useState("")
+    const [date, setDate] = useState()
+
+    const [calorieDataEntries, setCalorieDataEntries] = useState()
+
+    const addCalorieIntake = async (e) => {
+        e.preventDefault()
+
+        if (!item || !quantity || !unit || !date) {
+            alert("Please fill all fields");
+            return;
+        }
+        setCalorieDataEntries({
+            item,
+            quantity,
+            unit,
+            date: new Date(date)
+        })
+
+        try {
+
+           if (calorieDataEntries) {
+                const result = await addCalorieIntakeAPI(calorieDataEntries)
+                alert(result.data.response);
+            }
+
+        } catch (error) {
+            console.log(error.response);
+
+        }
+
+
+    }
+
+
+
 
 
     return (
@@ -30,33 +69,29 @@ function UpdatePopUp({ reportName }) {
                         reportName === "CALORIE INTAKE" ?
                             <div className='CALORIE-INTAKE'>
 
-                                <form action="">
-                                    <input type="text" placeholder='food item name' className='form-control mb-3' />
-                                    <input type="number" placeholder='quantity' className='form-control mb-3' />
+                                <form onSubmit={addCalorieIntake}>
+                                    <input type="text" placeholder='food item name' value={item} onChange={e => setItem(e.target.value)} className='form-control mb-3' required />
+                                    <input type="number" placeholder='quantity' value={quantity} onChange={e => setQuantity(e.target.value)} className='form-control mb-3' required />
 
-                                    <select className='form-control mb-3' >
-                                        <option disabled selected>select quantity unit</option>
+                                    <select
+                                        className="form-control mb-3"
+                                        value={unit}
+                                        onChange={(e) => setUnit(e.target.value)}
+                                        required
+                                    >
+                                        <option value="" disabled>
+                                            Select quantity unit
+                                        </option>
                                         <option value="g">Gram</option>
                                         <option value="kg">KG</option>
-                                        <option value="ml">Mili Litre</option>
+                                        <option value="ml">Milli Litre</option>
                                         <option value="l">Litre</option>
                                     </select>
 
-                                    <input type="datetime-local" placeholder='Date of consume' className='form-control mb-3' />
+                                    <input type="datetime-local" placeholder='' value={date} onChange={e => setDate(e.target.value)} className='form-control mb-3' required />
 
-                                    <button className='btn btn-success mb-3 form-control'>Update Report</button>
+                                    <button type='submit' className='btn btn-success mb-3 form-control'>Update Report</button>
                                 </form>
-
-                                <button className='btn btn-danger form-control mb-3' onClick={() => setShowTargetField(true)} >Set Goal</button>
-
-                                {
-                                    showTargetField &&
-                                    <div className='d-flex gap-2'>
-                                        <button className='btn btn-danger'>Save</button>
-                                        <input type="number" className='form-control' placeholder='Target Calorie in KCal' />
-                                    </div>
-                                }
-
                             </div>
                             :
                             reportName === "SLEEP" ?
@@ -70,16 +105,6 @@ function UpdatePopUp({ reportName }) {
                                         <button className='btn btn-success form-control mb-3'>Update Report</button>
                                     </form>
 
-                                    <button className='btn btn-danger form-control mb-3' onClick={() => setShowTargetField(true)} >Set Target</button>
-
-                                    {
-                                        showTargetField &&
-                                        <div className='d-flex gap-2'>
-                                            <button className='btn btn-danger'>Save</button>
-                                            <input type="text" className='form-control' placeholder='Sleep in hrs(8-9 hrs prefers  )' />
-                                        </div>
-                                    }
-
 
                                 </div>
                                 :
@@ -88,70 +113,27 @@ function UpdatePopUp({ reportName }) {
 
                                         <form action="">
                                             <input type="number" placeholder='water consumed in Litre' className='form-control mb-3' />
-                                            <input type="date" placeholder='Date of consume' className='form-control mb-3' />
+                                            <input type="date" placeholder='Date' className='form-control mb-3' />
 
                                             <button className='btn btn-success form-control mb-3'>Update Report</button>
                                         </form>
 
-                                        <button className='btn btn-danger form-control mb-3' onClick={() => setShowTargetField(true)} >Set Target</button>
-
-                                        {
-                                            showTargetField &&
-                                            <div className='d-flex gap-2'>
-                                                <button className='btn btn-danger'>Save</button>
-                                                <input type="text" className='form-control' placeholder='Water Intake in Litre' />
-                                            </div>
-                                        }
-
-
                                     </div>
                                     :
+
+
                                     reportName === "WEIGHT" ?
                                         <div className='WEIGHT'>
                                             <form action="">
                                                 <input type="number" placeholder='weight' className='form-control mb-3' />
-                                                <input type="date" placeholder='Date of consume' className='form-control mb-3' />
+                                                <input type="date" placeholder='Date' className='form-control mb-3' />
 
                                                 <button className='btn btn-success form-control mb-3'>Update Report</button>
                                             </form>
 
-                                            <button className='btn btn-danger form-control mb-3' onClick={() => setShowTargetField(true)} >Set Target</button>
-
-                                            {
-                                                showTargetField &&
-                                                <div className='d-flex gap-2'>
-                                                    <button className='btn btn-danger'>Save</button>
-                                                    <input type="text" className='form-control' placeholder='Target Weight in Kg' />
-                                                </div>
-                                            }
-
-
                                         </div>
                                         :
-                                        reportName === "WORKOUTS" ?
-                                            <div className='WORKOUTS'>
-
-                                                <form action="">
-                                                    <input type="number" placeholder='number of workout done' className='form-control mb-3' />
-                                                    <input type="date" placeholder='Date of consume' className='form-control mb-3' />
-
-                                                    <button className='btn btn-success form-control mb-3'>Update Report</button>
-                                                </form>
-
-                                                <button className='btn btn-danger form-control mb-3' onClick={() => setShowTargetField(true)} >Set Target</button>
-
-                                                {
-                                                    showTargetField &&
-                                                    <div className='d-flex gap-2'>
-                                                        <button className='btn btn-danger'>Save</button>
-                                                        <input type="text" className='form-control' placeholder='Workouts  (Recommended 6-8)' />
-                                                    </div>
-                                                }
-
-
-                                            </div>
-                                            :
-                                            <h5 className='fw-bolder text-warning  text-center'>Coming Soon...</h5>
+                                        <h5 className='fw-bolder text-warning  text-center'>Coming Soon...</h5>
 
                     }
 

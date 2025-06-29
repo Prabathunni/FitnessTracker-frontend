@@ -6,10 +6,15 @@ import UpdatePopUp from '../Components/UpdatePopUp'
 import { useAuth } from '../contexts/AuthContext'
 import { useParams } from 'react-router-dom'
 import { Button, FloatingLabel, Form, Modal } from 'react-bootstrap'
+import { getCalorieByLimitAPI } from '../services/userServices'
 
 function Report() {
 
   // modal
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
 
   const [checkReportName, setCheckReportName] = useState()
   const { dataName } = useParams()
@@ -83,6 +88,25 @@ function Report() {
   }
 
 
+  const getCalorieByLimit = async (limit) => {
+
+    try {
+      console.log(limit);
+      if (limit) {
+        const result = await getCalorieByLimitAPI({limit})
+        console.log(result);
+      }
+      handleClose()
+
+
+    } catch (error) {
+      console.log(error);
+      
+    }
+
+  }
+
+
   useEffect(() => {
     getChartData()
     getCheckReportName()
@@ -94,7 +118,7 @@ function Report() {
     <div className={`${styles.reportSection}`}>
       <Header />
 
-      <div className='d-flex flex-wrap justify-content-center' style={{marginTop:"60px"}}>
+      <div className='d-flex flex-wrap justify-content-center' style={{ marginTop: "60px" }}>
 
         <div className='section1'>
           {
@@ -128,7 +152,7 @@ function Report() {
           }
         </div>
 
-{/* 
+        {/* 
         <div className='section2'>
           {
             dataS1 &&
@@ -237,7 +261,7 @@ function Report() {
           Update Report <i class="fa-solid fa-file-pen ms-2"></i>
         </button>
 
-        <button className="btn btn-primary">
+        <button className="btn btn-primary" onClick={handleShow}>
           Analyse <i class="fa-solid fa-magnifying-glass-chart ms-2"></i>
         </button>
 
@@ -247,6 +271,57 @@ function Report() {
       {
         showUpdatePopUp && <UpdatePopUp reportName={checkReportName} />
       }
+
+
+      <Modal
+        show={show}
+        onHide={handleClose}
+        backdrop="static"
+        keyboard={false}
+        centered
+        size='md'
+      >
+        <Modal.Body>
+
+          <h5 className='text-center mb-2'>Analyse</h5>
+
+          <div >
+            <FloatingLabel
+              controlId="floatingInput"
+              label="Analyze By Date"
+              className="mb-3"
+            >
+              <Form.Control type="date" placeholder="Recorded Date" />
+            </FloatingLabel>
+
+            <div
+              className="d-flex gap-3"
+              style={{ height: "40px" }}
+            >
+              <button onClick={() => getCalorieByLimit("all")} className="btn btn-outline-primary">All</button>
+              <button onClick={() => getCalorieByLimit("last7days")} className="btn btn-outline-primary">Last 7 Days</button>
+              <button onClick={() => getCalorieByLimit("last10days")} className="btn btn-outline-primary">Last 10 Days</button>
+            </div>
+
+
+
+
+          </div>
+
+          <div className='d-flex justify-content-center gap-2 mt-5'>
+
+            <Button variant="secondary" onClick={handleClose}>
+              Close
+            </Button>
+            <Button variant="primary">Analyse</Button>
+
+
+          </div>
+
+
+        </Modal.Body>
+      </Modal>
+
 
 
 

@@ -10,7 +10,7 @@ import { verifyTokenAPI } from '../services/userServices'
 import { useAuth } from '../contexts/AuthContext'
 
 function AppRoutes() {
-        const { isUserLogged, setIsUserLogged } = useAuth();
+        const { setIsUserLogged } = useAuth();
     
 
         useEffect(() => {
@@ -41,7 +41,7 @@ function AppRoutes() {
         <Routes>
             <Route element={<LayoutWithFooter />}>
                 <Route path='/' element={<HomePage />} />
-                <Route path='/workout/:type' element={<WorkoutLogger />} />
+                <Route path='/workout/:id' element={<WorkoutLogger />} />
                 <Route path='/report/:dataName' element={<Report />} />
                 <Route path='/profile' element={<Profile />} />
             </Route>

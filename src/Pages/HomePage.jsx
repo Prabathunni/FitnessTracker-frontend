@@ -6,8 +6,13 @@ import { useAuth } from '../contexts/AuthContext';
 import VideoBanner from '../Components/VideoBanner';
 import ImageBanner from '../Components/ImageBanner';
 import Auth from '../Components/Auth';
-import { getAllMuscleAPI } from '../services/userServices';
+import { getAllWorkoutsAPI } from '../services/userServices';
 
+// const muscleGroupData = await getAllMuscleAPI()
+// const datas = muscleGroupData.data
+// if(datas){
+//     setWorkout(datas)
+// }
 
 
 
@@ -21,19 +26,17 @@ function HomePage() {
 
     const getAllMuscleGroup = async () => {
         try {
-            const muscleGroupData = await getAllMuscleAPI()
-            const datas = muscleGroupData.data
-            if(datas){
-                setWorkout(datas)
-            }
-            
+
+            const result = await getAllWorkoutsAPI()
+            const muscleData = result.data.response;
+            // console.log(muscleData);
+            setWorkout(muscleData)
+
 
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
     }
-
-
 
 
     useEffect(() => {
@@ -43,11 +46,8 @@ function HomePage() {
     }, [])
 
 
-
-
-
     return (
-        <div style={{paddingBottom:"150px"}}>
+        <div style={{ paddingBottom: "150px" }}>
 
 
             {
@@ -83,13 +83,13 @@ function HomePage() {
                             {/* BODY PARTS  */}
 
                             {
-                            workout.length>0?
-                            workout.map((item, index) => (
+                                workout.length > 0 ?
+                                    workout.map((item, index) => (
 
-                                <DisplayBodyParts key={index} item={item} />
+                                        <DisplayBodyParts key={index} item={item} />
 
-                            )):
-                            <h4 className='text-danger'> MucleGroups will be added soon... </h4>
+                                    )) :
+                                    <h4 className='text-danger'> MucleGroups will be added soon... </h4>
                             }
 
                         </div>

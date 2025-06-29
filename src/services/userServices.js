@@ -33,7 +33,7 @@ export const loginAPI = async(credentials)=>{
     }
 }
 
-// VERIFY TOKEN API
+// VERIFY TOKEN API for entire website
 export const verifyTokenAPI = async () =>{
     try {
 
@@ -63,6 +63,9 @@ export const logoutUserApi = async()=>{
     }
 }
 
+
+
+
 // get allmuscle groups
 export const getAllMuscleAPI = async()=>{
 
@@ -78,4 +81,78 @@ export const getAllMuscleAPI = async()=>{
         
     }
 
+}
+
+
+// Get Report API 
+export const getAllReportAPI =async () => {
+    try {
+
+        const result = axios.get(`${server_url}/report`, {withCredentials:true})
+        return result
+        
+    } catch (error) {
+        console.log(error);
+        throw error
+    }
+}
+
+
+// GET ALL WORKOUT (MUSCLE GROUPS)
+export const getAllWorkoutsAPI =async () => {
+    try {
+
+        const result = axios.get(`${server_url}/workout`, {withCredentials:true})
+        return result
+        
+    } catch (error) {
+        console.log(error);
+        throw error
+    }
+}
+
+
+// GET Exercise by workout id from parameters 
+export const getExerciseByIdAPI =async (id) => {
+    try {
+        const result = axios.get(`${server_url}/workout/${id}`, {withCredentials:true})
+        return result
+        
+    } catch (error) {
+        console.log(error);
+        throw error
+    }
+}
+
+
+// add Calorie intake
+export const addCalorieIntakeAPI = async (CalorieDataEntries) => {
+    
+    try {
+        
+        const result = axios.post(`${server_url}/addcalorie`, CalorieDataEntries , {withCredentials: true} )
+        return result
+        
+    } catch (error) {
+       console.log(error);
+       throw error
+    }
+}
+
+
+// Get Calorie by limit 
+export const getCalorieByLimitAPI = async (limit) => {
+
+    try {
+
+        const result = axios.post(`${server_url}/caloriebylimit`, limit , {withCredentials: true} )
+        return result
+        
+        
+    } catch (error) {
+        console.log(error);
+        throw error
+        
+    }
+    
 }
