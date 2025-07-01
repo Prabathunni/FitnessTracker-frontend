@@ -14,6 +14,8 @@ function ProgressCard() {
         try {
             const result = await getAllReportAPI()
             const reportData = result.data.response;
+            console.log(reportData);
+            
             setData(reportData)
 
         } catch (error) {
