@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import Header from '../Components/Header'
-import { CircularProgress, Typography, Box } from '@mui/material';
+import { CircularProgress, Typography, Box, duration } from '@mui/material';
 import { BarChart, BarPlot, ChartContainer, ChartsTooltip, ChartsXAxis, ChartsYAxis } from '@mui/x-charts'
 import styles from './ReportPage.module.css'
 import UpdatePopUp from '../Components/UpdatePopUp'
 import { useAuth } from '../contexts/AuthContext'
 import { useParams } from 'react-router-dom'
 import { Button, FloatingLabel, Form, Modal } from 'react-bootstrap'
-import { getAllReportAPI, getCalorieByDateAPI, getCalorieByLimitAPI } from '../services/userServices'
+import { getAllReportAPI, getCalorieByDateAPI, getCalorieByLimitAPI, getSleepByDateAPI } from '../services/userServices'
 
 function Report() {
 
@@ -21,10 +21,14 @@ function Report() {
   const [checkReportName, setCheckReportName] = useState()
   const { dataName } = useParams()
 
+  const [dateForAnalyze, setDateForAnalyze] = useState()
 
-  const [dataS1, setDataS1] = useState() //---------------for calorie limit data
-  const [dataS2, setDataS2] = useState() //----------------for calorie date data
-  const [dateForCalAnalyze, setDateForCalAnalyze] = useState()
+
+  const [dataS1, setDataS1] = useState() //---------------for limit data
+  const [dataS2, setDataS2] = useState() //----------------for date data
+
+  const [dataSleepChart, setDataSleepChart] = useState()
+
 
   // TOdays value and Goal Value Graph valuess
   const [goalTrack, setGoalTrack] = useState(0);
@@ -90,14 +94,14 @@ function Report() {
 
     try {
 
-      if (dateForCalAnalyze) {
-        const neededDate = new Date(dateForCalAnalyze)
+      if (dateForAnalyze) {
+        const neededDate = new Date(dateForAnalyze)
         const jsonDate = neededDate.toJSON()
         // console.log(neededDate);
         // console.log(jsonDate);
 
         const result = await getCalorieByDateAPI(jsonDate)
-        console.log(result.data.response);                 //------------------bug found giving undefined at first
+        // console.log(result.data.response);                 //------------------bug found giving undefined at first**fixed!!!!
         const warningMessage = result.data.response
         warningMessage && alert(warningMessage)
 
@@ -117,7 +121,7 @@ function Report() {
 
         }
 
-        setDateForCalAnalyze()
+        setDateForAnalyze()
         setShow(false)
 
 
@@ -130,7 +134,7 @@ function Report() {
     } catch (error) {
       console.log(error);
       setShow(false)
-      setDateForCalAnalyze()
+      setDateForAnalyze()
     }
   }
 
@@ -202,6 +206,62 @@ function Report() {
 
   // _________________________________________________SLEEP FUNCTIONS___________
 
+
+  const getSleepByDate = async (e) => {
+    e.preventDefault()
+
+    try {
+      if (dateForAnalyze) {
+        const neededDate = new Date(dateForAnalyze)
+        const jsonDate = neededDate.toJSON()
+        // console.log(neededDate);
+        // console.log(jsonDate);
+
+        const result = await getSleepByDateAPI(jsonDate)
+        // console.log(result);         
+
+        const sleepDataArray = result.data.response
+        console.log(sleepDataArray);
+
+        if (sleepDataArray.length > 0) {
+
+          // {date: '2025-07-02T00:00:00.000Z', durationInHr: 9, _id: '68658ac91d428e8a6b35885b'}
+
+          const graphData = sleepDataArray.map((item) => ({
+            label: item.date,
+            sleeptHrs: Number(item.durationInHr)
+          }))
+          console.log(graphData);
+          setDataSleepChart(graphData)
+
+        }
+
+        setDateForAnalyze()
+        setShow(false)
+
+
+      } else {
+        alert("Provide Date for Analyze")
+        setShow(false)
+
+      }
+
+
+    } catch (error) {
+      console.log(error);
+      setShow(false)
+      setDateForAnalyze()
+
+      if (error.response.status === 404) {
+        alert(error.response.data.response)
+      }
+
+
+    }
+
+  }
+
+
   const getSleepByLimit = async (limit) => {
     console.log("In sleeep", limit);
 
@@ -210,7 +270,7 @@ function Report() {
 
 
 
-  
+
 
   const getWaterIntakeByLimit = async (limit) => {
     console.log("In water", limit);
@@ -359,6 +419,38 @@ function Report() {
             </ChartContainer>
           }
 
+          {/* SLEEP ----------bY LIMIT--------------------------- */}
+          {
+            dataS1 &&
+            <ChartContainer
+              height={400}
+              dataset={dataS1}
+              colors={colorPalette}
+
+              series={[
+                {
+                  type: 'bar',
+                  dataKey: 'intake',
+                  label: 'Calorie Intake',
+                },
+              ]}
+              xAxis={[{
+                id: 'label',
+                dataKey: 'label',
+                scaleType: 'band',
+                label: 'Day',
+              }]}
+              yAxis={[{
+                label: 'Calories',
+              }]}
+            >
+              <BarPlot />
+              <ChartsXAxis />
+              <ChartsYAxis />
+              <ChartsTooltip />
+            </ChartContainer>
+          }
+
 
         </div>
 
@@ -366,10 +458,10 @@ function Report() {
         <div className='section3 d-flex justify-content-center align-items-center'>
 
           {dataS2 && <h3 className='text-center'>Date Analyze Report</h3>}
+          {dataSleepChart && <h3 className='text-center'>Date Analyze Report</h3>}
 
-
+          {/* FOR CALORIE -----------------BY DATE */}
           {
-
             dataS2 &&
             <ChartContainer
               width={600}
@@ -404,6 +496,49 @@ function Report() {
                 {
                   id: 'foodAxis',
                   dataKey: 'food',
+                  scaleType: 'band',
+                },
+              ]}
+            >
+              <BarPlot />
+              <ChartsXAxis />
+              <ChartsYAxis />
+              <ChartsTooltip />
+            </ChartContainer>
+
+          }
+
+          {/* For Sleep by date---------------------- */}
+
+          {
+            dataSleepChart &&
+            <ChartContainer
+              width={500}
+              height={120}
+              layout="horizontal"
+              dataset={dataSleepChart}
+              series={[
+                {
+                  type: 'bar',
+                  dataKey: 'sleeptHrs',
+                  label: 'Hours Slept',
+                  yAxisKey: 'labelAxis',
+                  layout: 'horizontal',
+                  color: '#42a5f5',
+                },
+              ]}
+              xAxis={[
+                {
+                  scaleType: 'linear',
+                  label: 'Hours Slept',
+                  min: 0,
+                  max: 10, // Adjust based on expected range
+                },
+              ]}
+              yAxis={[
+                {
+                  id: 'labelAxis',
+                  dataKey: 'label',
                   scaleType: 'band',
                 },
               ]}
@@ -460,7 +595,7 @@ function Report() {
               label="Analyze By Date"
               className="mb-3"
             >
-              <Form.Control type="date" onChange={e => setDateForCalAnalyze(e.target.value)} placeholder="Recorded Date" />
+              <Form.Control type="date" onChange={e => setDateForAnalyze(e.target.value)} placeholder="Recorded Date" />
             </FloatingLabel>
 
             <div
@@ -512,7 +647,7 @@ function Report() {
               dataName === "CALORIE INTAKE" && <Button variant="primary" onClick={getCalorieByDate}>Analyse</Button>
             }
             {
-              dataName === "SLEEP" && <Button variant="primary">Analyse</Button>
+              dataName === "SLEEP" && <Button variant="primary" onClick={getSleepByDate}>Analyse</Button>
             }
             {
               dataName === "WATER INTAKE" && <Button variant="primary">Analyse</Button>

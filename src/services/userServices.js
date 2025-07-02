@@ -181,3 +181,18 @@ export const addSleepAPI = async (sleepEntries) => {
         throw error 
     }
 }
+
+
+// get sleep by date api
+export const getSleepByDateAPI = async (jsonDate) => {
+    try {
+
+        const result =await axios.post(`${server_url}/sleepbydate`, {date: jsonDate}, {withCredentials: true})
+        return result
+        
+    } catch (error) {
+        console.log(error);
+        throw error 
+        
+    }
+}
