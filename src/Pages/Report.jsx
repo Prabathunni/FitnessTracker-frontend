@@ -5,9 +5,9 @@ import { BarPlot, ChartContainer, ChartsTooltip, ChartsXAxis, ChartsYAxis } from
 import styles from './ReportPage.module.css'
 import UpdatePopUp from '../Components/UpdatePopUp'
 import { useAuth } from '../contexts/AuthContext'
-import { data, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { Button, FloatingLabel, Form, Modal } from 'react-bootstrap'
-import { getAllReportAPI, getCalorieByDateAPI, getCalorieByLimitAPI, getSleepByDateAPI, getSleepByLimitAPI, getWaterByDateAPI, getWaterByLimitAPI } from '../services/userServices'
+import { getAllReportAPI, getCalorieByDateAPI, getCalorieByLimitAPI, getSleepByDateAPI, getSleepByLimitAPI, getWaterByDateAPI, getWaterByLimitAPI, getWeightByLimitAPI } from '../services/userServices'
 
 function Report() {
 
@@ -32,6 +32,9 @@ function Report() {
   //CHARTDATA---WATER
   const [dataWaterChart, setDataWaterChart] = useState()
   const [dataWaterChartS2, setDataWaterChartS2] = useState()
+  //CHARTDATA---WEIGHT
+  const [dataWeightChart, setDataWeightChart] = useState()
+  // const [dataWeightChartS2, setDataWeightChartS2] = useState()
 
 
   // TOdays value and Goal Value Graph valuess
@@ -406,7 +409,7 @@ function Report() {
 
 
   const getWaterByDate = async (e) => {
-        e.preventDefault()
+    e.preventDefault()
 
     try {
       if (dateForAnalyze) {
@@ -422,7 +425,7 @@ function Report() {
 
         if (waterDataArray.length > 0) {
 
-        // { date: '2025-06-25T15:46:30.123Z', waterTakenInMl: 2000, _id: '686132cfab9357b131847d41' }
+          // { date: '2025-06-25T15:46:30.123Z', waterTakenInMl: 2000, _id: '686132cfab9357b131847d41' }
 
           const graphData = waterDataArray.map((item) => ({
             label: item.date,
@@ -460,17 +463,67 @@ function Report() {
 
 
   // __________________________________________________WEIGHT FUNCTIONS-----------------
-  
-
-
-
-
-
 
   const getWeightByLimit = async (limit) => {
-    console.log("In weight", limit);
+    try {
+
+      if (limit) {
+        const result = await getWeightByLimitAPI({ limit })
+        const weightDataArray = result.data.response
+        // console.log(weightDataArray);
+        // {weight: 65, date: '2025-06-29T10:44:55.651Z', _id: '686119277b0f17901c24dc88'}
+
+        if (weightDataArray) {
+
+          const dataSet = weightDataArray.map((item) => {
+            const d = new Date(item.date);
+            const month = d.toLocaleString('default', { month: 'short' })
+            const day = d.getDate();
+            return {
+              label: `${month} ${day}`,
+              month,
+              day,
+              weight: Number(item.weight)
+            }
+          })
+
+          // dataSet ==>
+          // {label: 'Jun 27', month: 'Jun', day: 27, intake: 100}
+          // {label: 'Jun 27', month: 'Jun', day: 27, intake: 100}
+          // {label: 'Jun 27', month: 'Jun', day: 27, intake: 1000}
+
+          const group = {}
+
+          dataSet.forEach((item) => {
+            const { label, month, day, weight } = item
+            if (!group[label]) {
+              group[label] = { label, month, day, weight: Number(item.weight) }
+            } else {
+              group[label].weight = Number(weight)
+            }
+          })
+
+          const groupedData = Object.values(group)
+          console.log(groupedData);
+          setDataWeightChart(groupedData)
+
+        } else {
+          alert("No Records Found!")
+        }
+
+        handleClose()
+      }
+
+    } catch (error) {
+      console.log(error);
+      handleClose()
+    }
+
 
   }
+
+
+  
 
 
 
@@ -580,6 +633,7 @@ function Report() {
           {dataS1 && <h3 className='text-center'>Analyze Report</h3>}
           {dataSleepChartS2 && <h3 className='text-center'>Analyze Report</h3>}
           {dataWaterChart && <h3 className='text-center'>Analyze Report</h3>}
+          {dataWeightChart && <h3 className='text-center'>Analyze Report</h3>}
 
 
           {/* CALORIE ----------bY LIMIT--------------------------- */}
@@ -649,7 +703,6 @@ function Report() {
 
 
           {/* WATER ----------bY LIMIT--------------------------- */}
-
           {
             dataWaterChart &&
             <ChartContainer
@@ -672,6 +725,39 @@ function Report() {
               }]}
               yAxis={[{
                 label: 'Watertaken In ML',
+              }]}
+            >
+              <BarPlot />
+              <ChartsXAxis />
+              <ChartsYAxis />
+              <ChartsTooltip />
+            </ChartContainer>
+          }
+
+
+          {/* Weight ----------bY LIMIT--------------------------- */}
+          {
+            dataWeightChart &&
+            <ChartContainer
+              height={400}
+              dataset={dataWeightChart}
+              colors={colorPalette}
+
+              series={[
+                {
+                  type: 'bar',
+                  dataKey: 'weight',
+                  label: 'Weight in Kg',
+                },
+              ]}
+              xAxis={[{
+                id: 'label',
+                dataKey: 'label',
+                scaleType: 'band',
+                label: 'Day',
+              }]}
+              yAxis={[{
+                label: 'Weight in Kg',
               }]}
             >
               <BarPlot />

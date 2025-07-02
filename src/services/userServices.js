@@ -268,5 +268,23 @@ export const addWeightAPI = async (weightEntries) => {
     }
 }
 
+// get weight by limit api
+export const getWeightByLimitAPI = async (limit) => {
+
+    try {
+
+        const result =await axios.post(`${server_url}/getweightbylimit`, limit , {withCredentials: true} )
+        return result
+        
+        
+    } catch (error) {
+        console.log(error);
+        throw error
+        
+    }
+    
+}
+
+
 
 
