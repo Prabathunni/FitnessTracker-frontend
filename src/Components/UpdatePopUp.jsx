@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import styles from './Updatepopup.module.css'
 import { ImCross } from 'react-icons/im'
 import { useAuth } from '../contexts/AuthContext';
-import { addCalorieIntakeAPI, addSleepAPI } from '../services/userServices';
+import { addCalorieIntakeAPI, addSleepAPI, addWaterAPI } from '../services/userServices';
 
 
 function UpdatePopUp({ reportName, onUpdateSuccess }) {
@@ -18,8 +18,12 @@ function UpdatePopUp({ reportName, onUpdateSuccess }) {
     // sleep
     const [durationInHr, setDurationInHr] = useState()
 
+    // water
+    const [waterTakenInMl, setWaterTakenInMl] = useState()
+
     const [calorieDataEntries, setCalorieDataEntries] = useState()
     const [sleepDateEntries, setSleepDataEntries] = useState()
+    const [waterDataEntries, setWaterDataEntries] = useState()
 
     const addCalorieIntake = async (e) => {
         e.preventDefault()
@@ -78,7 +82,7 @@ function UpdatePopUp({ reportName, onUpdateSuccess }) {
                 // console.log(result);
                 alert(result.data.response);
                 setSleepDataEntries(),
-                setDate()
+                    setDate()
                 setDurationInHr()
                 setShowUpdatePopUp(false)
                 onUpdateSuccess?.();
@@ -89,6 +93,41 @@ function UpdatePopUp({ reportName, onUpdateSuccess }) {
             console.log(error.response);
             setShowUpdatePopUp(false)
         }
+
+
+    }
+
+    // Add Water 
+    const addWater = async (e) => {
+        e.preventDefault()
+
+        if (!date || !waterTakenInMl) {
+            alert("Please Provide all inputs")
+        }
+
+        setWaterDataEntries({
+            date: new Date(date),
+            waterTakenInMl
+        })
+
+        try {
+            if (waterDataEntries) {
+                const result = await addWaterAPI(waterDataEntries)
+                console.log(result);
+                alert(result.data.response);
+                setWaterDataEntries(),
+                setDate()
+                setWaterTakenInMl()
+                setShowUpdatePopUp(false)
+                onUpdateSuccess?.();
+
+            }
+
+        } catch (error) {
+            console.log(error.response);
+            setShowUpdatePopUp(false)
+        }
+
 
 
     }
@@ -149,8 +188,8 @@ function UpdatePopUp({ reportName, onUpdateSuccess }) {
 
                                     <form action="">
 
-                                        <input type="number" onChange={e => setDurationInHr(e.target.value)} placeholder='Hours slept?' className='form-control mb-3' />
-                                        <input type="date" onChange={e => setDate(e.target.value)} className='form-control mb-3' />
+                                        <input type="number" onChange={e => setDurationInHr(e.target.value)} placeholder='Hours slept?' className='form-control mb-3' required />
+                                        <input type="date" onChange={e => setDate(e.target.value)} className='form-control mb-3' required />
 
                                         <button onClick={addSleep} className='btn btn-success form-control mb-3'>Update Report</button>
                                     </form>
@@ -162,10 +201,10 @@ function UpdatePopUp({ reportName, onUpdateSuccess }) {
                                     <div className='WATER INTAKE'>
 
                                         <form action="">
-                                            <input type="number" placeholder='water consumed in Litre' className='form-control mb-3' />
-                                            <input type="date" placeholder='Date' className='form-control mb-3' />
+                                            <input type="number" onChange={e => setWaterTakenInMl(e.target.value)} placeholder='water consumed in MiliLitre' className='form-control mb-3' required />
+                                            <input type="date" onChange={e => setDate(e.target.value)} placeholder='Date' className='form-control mb-3' required />
 
-                                            <button className='btn btn-success form-control mb-3'>Update Report</button>
+                                            <button onClick={addWater} className='btn btn-success form-control mb-3'>Update Report</button>
                                         </form>
 
                                     </div>

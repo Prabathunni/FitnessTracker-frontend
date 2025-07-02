@@ -7,7 +7,7 @@ import UpdatePopUp from '../Components/UpdatePopUp'
 import { useAuth } from '../contexts/AuthContext'
 import { data, useParams } from 'react-router-dom'
 import { Button, FloatingLabel, Form, Modal } from 'react-bootstrap'
-import { getAllReportAPI, getCalorieByDateAPI, getCalorieByLimitAPI, getSleepByDateAPI, getSleepByLimitAPI } from '../services/userServices'
+import { getAllReportAPI, getCalorieByDateAPI, getCalorieByLimitAPI, getSleepByDateAPI, getSleepByLimitAPI, getWaterByLimitAPI } from '../services/userServices'
 
 function Report() {
 
@@ -23,12 +23,15 @@ function Report() {
 
   const [dateForAnalyze, setDateForAnalyze] = useState()
 
-
+  // CHARTDATA----CALORIE
   const [dataS1, setDataS1] = useState() //---------------for limit data
   const [dataS2, setDataS2] = useState() //----------------for date data
-
+  // CHARTDATA----SLEEP
   const [dataSleepChart, setDataSleepChart] = useState()
   const [dataSleepChartS2, setDataSleepChartS2] = useState()
+  //CHARTDATA---WATER
+  const [dataWaterChart, setDataWaterChart] = useState()
+  // const [dataSleepChartS2, setDataSleepChartS2] = useState()
 
 
   // TOdays value and Goal Value Graph valuess
@@ -43,6 +46,8 @@ function Report() {
     try {
       const result = await getAllReportAPI()
       const reportData = result.data.response;
+      console.log(reportData);
+
 
 
       if (dataName === 'CALORIE INTAKE') {
@@ -333,13 +338,133 @@ function Report() {
 
 
 
-
-
+  // _________________________________________________-WATER FUNCITONS_____________
 
   const getWaterIntakeByLimit = async (limit) => {
-    console.log("In water", limit);
+    try {
+
+      if (limit) {
+        const result = await getWaterByLimitAPI({ limit })
+        const waterDataArray = result.data.response
+        // console.log(waterDataArray);
+
+        // { date: '2025-06-25T15:46:30.123Z', waterTakenInMl: 2000, _id: '686132cfab9357b131847d41' }
+        // { date: '2025-06-28T15:46:30.123Z', waterTakenInMl: 2000, _id: '68613324cd8982464c10fbbf' }
+        // { date: '2025-07-01T00:00:00.000Z', waterTakenInMl: 1, _id: '68659f5dbd4cb74b7185f1d1' }
+
+        if (waterDataArray) {
+
+          const dataSet = waterDataArray.map((item) => {
+            const d = new Date(item.date);
+            const month = d.toLocaleString('default', { month: 'short' })
+            const day = d.getDate();
+            return {
+              label: `${month} ${day}`,
+              month,
+              day,
+              waterTakenInMl: Number(item.waterTakenInMl)
+            }
+          })
+
+          // dataSet ==>
+          // {label: 'Jun 27', month: 'Jun', day: 27, intake: 100}
+          // {label: 'Jun 27', month: 'Jun', day: 27, intake: 100}
+          // {label: 'Jun 27', month: 'Jun', day: 27, intake: 1000}
+          // {label: 'Jun 22', month: 'Jun', day: 22, intake: 200}
+          // {label: 'Jun 22', month: 'Jun', day: 22, intake: 200}
+          // {label: 'Jun 30', month: 'Jun', day: 30, intake: 100}
+          // {label: 'Jun 30', month: 'Jun', day: 30, intake: 50}
+          // {label: 'Jul 1', month: 'Jul', day: 1, intake: 200}
+
+          const group = {}
+
+          dataSet.forEach((item) => {
+            const { label, month, day, waterTakenInMl } = item
+            if (!group[label]) {
+              group[label] = { label, month, day, waterTakenInMl: Number(item.waterTakenInMl) }
+            } else {
+              group[label].waterTakenInMl += Number(waterTakenInMl)
+            }
+          })
+
+          const groupedData = Object.values(group)
+          // console.log(groupedData);
+          setDataWaterChart(groupedData)
+
+        } else {
+          alert("No Records Found!")
+        }
+
+        handleClose()
+      }
+
+    } catch (error) {
+      console.log(error);
+      handleClose()
+    }
+  }
+
+
+  const getWaterByDate = async (e) => {
+        e.preventDefault()
+
+    try {
+      if (dateForAnalyze) {
+        const neededDate = new Date(dateForAnalyze)
+        const jsonDate = neededDate.toJSON()
+        // console.log(neededDate);
+        // console.log(jsonDate);
+
+        const result = await getSleepByDateAPI(jsonDate)
+        // console.log(result);         
+
+        const sleepDataArray = result.data.response
+        console.log(sleepDataArray);
+
+        if (sleepDataArray.length > 0) {
+
+          // {date: '2025-07-02T00:00:00.000Z', durationInHr: 9, _id: '68658ac91d428e8a6b35885b'}
+
+          const graphData = sleepDataArray.map((item) => ({
+            label: item.date,
+            sleeptHrs: Number(item.durationInHr)
+          }))
+          console.log(graphData);
+          setDataSleepChart(graphData)
+
+        }
+
+        setDateForAnalyze()
+        setShow(false)
+
+
+      } else {
+        alert("Provide Date for Analyze")
+        setShow(false)
+
+      }
+
+
+    } catch (error) {
+      console.log(error);
+      setShow(false)
+      setDateForAnalyze()
+
+      if (error.response.status === 404) {
+        alert(error.response.data.response)
+      }
+
+
+    }
 
   }
+
+
+
+
+
+
+
   const getWeightByLimit = async (limit) => {
     console.log("In weight", limit);
 
@@ -452,7 +577,10 @@ function Report() {
 
           {dataS1 && <h3 className='text-center'>Analyze Report</h3>}
           {dataSleepChartS2 && <h3 className='text-center'>Analyze Report</h3>}
+          {dataWaterChart && <h3 className='text-center'>Analyze Report</h3>}
 
+
+          {/* CALORIE ----------bY LIMIT--------------------------- */}
           {
             dataS1 &&
             <ChartContainer
@@ -508,6 +636,40 @@ function Report() {
               }]}
               yAxis={[{
                 label: 'Sleep in Hrs',
+              }]}
+            >
+              <BarPlot />
+              <ChartsXAxis />
+              <ChartsYAxis />
+              <ChartsTooltip />
+            </ChartContainer>
+          }
+
+
+          {/* WATER ----------bY LIMIT--------------------------- */}
+
+          {
+            dataWaterChart &&
+            <ChartContainer
+              height={400}
+              dataset={dataWaterChart}
+              colors={colorPalette}
+
+              series={[
+                {
+                  type: 'bar',
+                  dataKey: 'waterTakenInMl',
+                  label: 'Water Taken In ML',
+                },
+              ]}
+              xAxis={[{
+                id: 'label',
+                dataKey: 'label',
+                scaleType: 'band',
+                label: 'Day',
+              }]}
+              yAxis={[{
+                label: 'Watertaken In ML',
               }]}
             >
               <BarPlot />
@@ -716,7 +878,7 @@ function Report() {
               dataName === "SLEEP" && <Button variant="primary" onClick={getSleepByDate}>Analyse</Button>
             }
             {
-              dataName === "WATER INTAKE" && <Button variant="primary">Analyse</Button>
+              dataName === "WATER INTAKE" && <Button variant="primary" onClick={getWaterByDate}>Analyse</Button>
             }
             {
               dataName === "WEIGHT" && <Button variant="primary">Analyse</Button>

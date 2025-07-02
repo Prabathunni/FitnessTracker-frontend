@@ -214,3 +214,47 @@ export const getSleepByLimitAPI = async (limit) => {
     }
     
 }
+
+// add Water API
+export const addWaterAPI = async (waterEntries) => {
+    try {
+        const result =await axios.post(`${server_url}/addwater`, waterEntries, {withCredentials: true})
+        return result
+    } catch (error) {
+        console.log(error);
+        throw error 
+    }
+}
+
+// getWaterbylimitApi
+export const getWaterByLimitAPI = async (limit) => {
+
+    try {
+
+        const result =await axios.post(`${server_url}/getwaterbylimit`, limit , {withCredentials: true} )
+        return result
+        
+        
+    } catch (error) {
+        console.log(error);
+        throw error
+        
+    }
+    
+}
+
+// get water by date api
+export const getWaterByDateAPI = async (jsonDate) => {
+    try {
+
+        const result =await axios.post(`${server_url}/getwaterbydate`, {date: jsonDate}, {withCredentials: true})
+        return result
+        
+    } catch (error) {
+        console.log(error);
+        throw error 
+        
+    }
+}
+
+
