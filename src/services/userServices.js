@@ -64,31 +64,29 @@ export const logoutUserApi = async()=>{
 }
 
 
+// get allmuscle groups----------------**
+// export const getAllMuscleAPI = async()=>{
 
+//     try {
 
-// get allmuscle groups
-export const getAllMuscleAPI = async()=>{
-
-    try {
-
-        const result = await axios.get(`${server_url}/musclegroups`, {withCredentials: true})
-        return result
+//         const result =await axios.get(`${server_url}/musclegroups`, {withCredentials: true})
+//         return result
         
-    } catch (error) {
-        console.log(error);
-        throw error
+//     } catch (error) {
+//         console.log(error);
+//         throw error
         
         
-    }
+//     }
 
-}
+// }
 
 
 // Get Report API 
 export const getAllReportAPI =async () => {
     try {
 
-        const result = axios.get(`${server_url}/report`, {withCredentials:true})
+        const result =await axios.get(`${server_url}/report`, {withCredentials:true})
         return result
         
     } catch (error) {
@@ -102,7 +100,7 @@ export const getAllReportAPI =async () => {
 export const getAllWorkoutsAPI =async () => {
     try {
 
-        const result = axios.get(`${server_url}/workout`, {withCredentials:true})
+        const result =await axios.get(`${server_url}/workout`, {withCredentials:true})
         return result
         
     } catch (error) {
@@ -115,7 +113,7 @@ export const getAllWorkoutsAPI =async () => {
 // GET Exercise by workout id from parameters 
 export const getExerciseByIdAPI =async (id) => {
     try {
-        const result = axios.get(`${server_url}/workout/${id}`, {withCredentials:true})
+        const result =await axios.get(`${server_url}/workout/${id}`, {withCredentials:true})
         return result
         
     } catch (error) {
@@ -130,7 +128,7 @@ export const addCalorieIntakeAPI = async (CalorieDataEntries) => {
     
     try {
         
-        const result = axios.post(`${server_url}/addcalorie`, CalorieDataEntries , {withCredentials: true} )
+        const result =await axios.post(`${server_url}/addcalorie`, CalorieDataEntries , {withCredentials: true} )
         return result
         
     } catch (error) {
@@ -145,7 +143,7 @@ export const getCalorieByLimitAPI = async (limit) => {
 
     try {
 
-        const result = axios.post(`${server_url}/caloriebylimit`, limit , {withCredentials: true} )
+        const result =await axios.post(`${server_url}/caloriebylimit`, limit , {withCredentials: true} )
         return result
         
         
@@ -162,12 +160,24 @@ export const getCalorieByLimitAPI = async (limit) => {
 export const getCalorieByDateAPI = async (jsonDate) => {
     try {
 
-        const result = axios.post(`${server_url}/caloriebydate`, {date: jsonDate}, {withCredentials: true})
+        const result =await axios.post(`${server_url}/caloriebydate`, {date: jsonDate}, {withCredentials: true})
         return result
         
     } catch (error) {
         console.log(error);
         throw error 
         
+    }
+}
+
+
+// add sleep
+export const addSleepAPI = async (sleepEntries) => {
+    try {
+        const result =await axios.post(`${server_url}/addsleep`, sleepEntries, {withCredentials: true})
+        return result
+    } catch (error) {
+        console.log(error);
+        throw error 
     }
 }

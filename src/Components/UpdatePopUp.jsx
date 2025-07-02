@@ -2,19 +2,24 @@ import React, { useState } from 'react'
 import styles from './Updatepopup.module.css'
 import { ImCross } from 'react-icons/im'
 import { useAuth } from '../contexts/AuthContext';
-import { addCalorieIntakeAPI } from '../services/userServices';
+import { addCalorieIntakeAPI, addSleepAPI } from '../services/userServices';
 
 
-function UpdatePopUp({ reportName }) {
+function UpdatePopUp({ reportName, onUpdateSuccess }) {
     const { setShowUpdatePopUp } = useAuth()
 
-
+    // Calorie
     const [item, setItem] = useState("")
     const [quantity, setQuantity] = useState()
     const [unit, setUnit] = useState("")
+
     const [date, setDate] = useState()
 
+    // sleep
+    const [durationInHr, setDurationInHr] = useState()
+
     const [calorieDataEntries, setCalorieDataEntries] = useState()
+    const [sleepDateEntries, setSleepDataEntries] = useState()
 
     const addCalorieIntake = async (e) => {
         e.preventDefault()
@@ -32,23 +37,63 @@ function UpdatePopUp({ reportName }) {
 
         try {
 
-           if (calorieDataEntries) {
+            if (calorieDataEntries) {
                 const result = await addCalorieIntakeAPI(calorieDataEntries)
                 alert(result.data.response);
                 setCalorieDataEntries(),
-                setItem(""),
-                setQuantity(),
-                setUnit(""),
-                setDate()
+                    setItem(""),
+                    setQuantity(),
+                    setUnit(""),
+                    setDate()
+                setShowUpdatePopUp(false)
+                onUpdateSuccess?.();
+
+
             }
 
         } catch (error) {
             console.log(error.response);
+            setShowUpdatePopUp(false)
 
+
+        }
+    }
+
+    // Add Sleep
+    const addSleep = async (e) => {
+        e.preventDefault()
+
+        if (!date || !durationInHr) {
+            alert("Please Provide all inputs")
+        }
+
+        setSleepDataEntries({
+            date: new Date(date),
+            durationInHr
+        })
+
+        try {
+            if (sleepDateEntries) {
+                const result = await addSleepAPI(sleepDateEntries)
+                // console.log(result);
+                alert(result.data.response);
+                setSleepDataEntries(),
+                setDate()
+                setDurationInHr()
+                setShowUpdatePopUp(false)
+                onUpdateSuccess?.();
+
+            }
+
+        } catch (error) {
+            console.log(error.response);
+            setShowUpdatePopUp(false)
         }
 
 
     }
+
+
 
 
 
@@ -104,10 +149,10 @@ function UpdatePopUp({ reportName }) {
 
                                     <form action="">
 
-                                        <input type="number" placeholder='Hours slept?' className='form-control mb-3' />
-                                        <input type="date" className='form-control mb-3' />
+                                        <input type="number" onChange={e => setDurationInHr(e.target.value)} placeholder='Hours slept?' className='form-control mb-3' />
+                                        <input type="date" onChange={e => setDate(e.target.value)} className='form-control mb-3' />
 
-                                        <button className='btn btn-success form-control mb-3'>Update Report</button>
+                                        <button onClick={addSleep} className='btn btn-success form-control mb-3'>Update Report</button>
                                     </form>
 
 

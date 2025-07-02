@@ -32,55 +32,6 @@ function WorkoutLogger() {
   }
 
 
-
-
-  // const getWorkout = () => {
-
-  //   const data = {
-  //     type: "Chest",
-  //     imageUrl: "https://www.seannal.com/images/upper-chest.jpg",
-  //     durationInMinutes: 60,
-  //     exercises: [
-  //       {
-  //         exercise: "Bench Press",
-  //         videoUrl: 'https://media.tenor.com/0hoNLcggDG0AAAAM/bench-press.gif',
-  //         sets: 3,
-  //         reps: 15,
-  //         rest: 60,
-  //         description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem nihil sequi commodi perspiciatis itaque id molestias tenetur, possimus vel, omnis, tempora atque dolores minima recusandae? Ex ea veniam quisquam quibusdam!"
-  //       },
-  //       {
-  //         exercise: "Incline Bench Press",
-  //         videoUrl: 'https://149874912.v2.pressablecdn.com/wp-content/uploads/2020/03/Incline-Bench-Press.gif',
-  //         sets: 3,
-  //         reps: 15,
-  //         rest: 60,
-  //         description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem nihil sequi commodi perspiciatis itaque id molestias tenetur, possimus vel, omnis, tempora atque dolores minima recusandae? Ex ea veniam quisquam quibusdam!"
-
-  //       },
-  //       {
-  //         exercise: "Decline Cable Press",
-  //         videoUrl: 'https://gymvisual.com/img/p/2/5/6/3/1/25631.gif',
-  //         sets: 3,
-  //         reps: 15,
-  //         rest: 60,
-  //         description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem nihil sequi commodi perspiciatis itaque id molestias tenetur, possimus vel, omnis, tempora atque dolores minima recusandae? Ex ea veniam quisquam quibusdam!"
-
-  //       }
-  //     ]
-
-  //   }
-
-
-
-  //   setWorkouts(data)
-
-  // }
-
-
-
-
-
   useEffect(() => {
     getExercisesForWorkout(id)
   }, [])
