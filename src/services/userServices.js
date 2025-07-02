@@ -286,5 +286,23 @@ export const getWeightByLimitAPI = async (limit) => {
 }
 
 
+// get water by date api
+export const getWeightByDateAPI = async (jsonDate) => {
+    try {
+
+        const result =await axios.post(`${server_url}/getweightbydate`, {date: jsonDate}, {withCredentials: true})
+        return result
+        
+    } catch (error) {
+        console.log(error);
+        throw error 
+        
+    }
+}
+
+
+
+
+
 
 

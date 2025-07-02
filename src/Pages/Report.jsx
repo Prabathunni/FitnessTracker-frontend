@@ -7,7 +7,7 @@ import UpdatePopUp from '../Components/UpdatePopUp'
 import { useAuth } from '../contexts/AuthContext'
 import { useParams } from 'react-router-dom'
 import { Button, FloatingLabel, Form, Modal } from 'react-bootstrap'
-import { getAllReportAPI, getCalorieByDateAPI, getCalorieByLimitAPI, getSleepByDateAPI, getSleepByLimitAPI, getWaterByDateAPI, getWaterByLimitAPI, getWeightByLimitAPI } from '../services/userServices'
+import { getAllReportAPI, getCalorieByDateAPI, getCalorieByLimitAPI, getSleepByDateAPI, getSleepByLimitAPI, getWaterByDateAPI, getWaterByLimitAPI, getWeightByDateAPI, getWeightByLimitAPI } from '../services/userServices'
 
 function Report() {
 
@@ -34,7 +34,7 @@ function Report() {
   const [dataWaterChartS2, setDataWaterChartS2] = useState()
   //CHARTDATA---WEIGHT
   const [dataWeightChart, setDataWeightChart] = useState()
-  // const [dataWeightChartS2, setDataWeightChartS2] = useState()
+  const [dataWeightChartS2, setDataWeightChartS2] = useState()
 
 
   // TOdays value and Goal Value Graph valuess
@@ -523,7 +523,56 @@ function Report() {
   }
 
 
-  
+  const getWeightByDate = async (e) => {
+    e.preventDefault()
+
+    try {
+      if (dateForAnalyze) {
+        const neededDate = new Date(dateForAnalyze)
+        const jsonDate = neededDate.toJSON()
+        // console.log(neededDate);
+        // console.log(jsonDate);
+
+        const result = await getWeightByDateAPI(jsonDate)
+        // console.log(result);         
+        const weightDataArray = result.data.response
+        // console.log(weightDataArray);
+
+        if (weightDataArray.length > 0) {
+
+          // {weight: 66, date: '2025-07-01T00:00:00.000Z', _id: '6865aacfbae612b55e39569a'}
+          const graphData = weightDataArray.map((item) => ({
+            label: item.date,
+            weight: Number(item.weight)
+          }))
+          // console.log(graphData);
+          setDataWeightChartS2(graphData)
+
+        }
+
+        setDateForAnalyze()
+        setShow(false)
+
+
+      } else {
+        alert("Provide Date for Analyze")
+        setShow(false)
+
+      }
+
+
+    } catch (error) {
+      console.log(error);
+      setShow(false)
+      setDateForAnalyze()
+
+      if (error.response.status === 404) {
+        alert(error.response.data.response)
+      }
+
+
+    }
+  }
 
 
 
@@ -909,6 +958,48 @@ function Report() {
 
           }
 
+          {/* For Weight by date---------------------- */}
+          {
+            dataWeightChartS2 &&
+            <ChartContainer
+              width={500}
+              height={120}
+              layout="horizontal"
+              dataset={dataWeightChartS2}
+              series={[
+                {
+                  type: 'bar',
+                  dataKey: 'weight',
+                  label: 'Weight in Kg',
+                  yAxisKey: 'labelAxis',
+                  layout: 'horizontal',
+                  color: '#42a5f5',
+                },
+              ]}
+              xAxis={[
+                {
+                  scaleType: 'linear',
+                  label: 'Weight',
+                  // min: 0,
+                  // max: 3000, // Adjust based on expected range
+                },
+              ]}
+              yAxis={[
+                {
+                  id: 'labelAxis',
+                  dataKey: 'label',
+                  scaleType: 'band',
+                },
+              ]}
+            >
+              <BarPlot />
+              <ChartsXAxis />
+              <ChartsYAxis />
+              <ChartsTooltip />
+            </ChartContainer>
+
+          }
+
         </div>
 
 
@@ -1011,7 +1102,7 @@ function Report() {
               dataName === "WATER INTAKE" && <Button variant="primary" onClick={getWaterByDate}>Analyse</Button>
             }
             {
-              dataName === "WEIGHT" && <Button variant="primary">Analyse</Button>
+              dataName === "WEIGHT" && <Button variant="primary" onClick={getWeightByDate}>Analyse</Button>
             }
 
 
