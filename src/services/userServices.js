@@ -156,3 +156,18 @@ export const getCalorieByLimitAPI = async (limit) => {
     }
     
 }
+
+
+// get Calorie by Date 
+export const getCalorieByDateAPI = async (jsonDate) => {
+    try {
+
+        const result = axios.post(`${server_url}/caloriebydate`, {date: jsonDate}, {withCredentials: true})
+        return result
+        
+    } catch (error) {
+        console.log(error);
+        throw error 
+        
+    }
+}

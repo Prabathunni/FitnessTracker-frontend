@@ -35,6 +35,11 @@ function UpdatePopUp({ reportName }) {
            if (calorieDataEntries) {
                 const result = await addCalorieIntakeAPI(calorieDataEntries)
                 alert(result.data.response);
+                setCalorieDataEntries(),
+                setItem(""),
+                setQuantity(),
+                setUnit(""),
+                setDate()
             }
 
         } catch (error) {

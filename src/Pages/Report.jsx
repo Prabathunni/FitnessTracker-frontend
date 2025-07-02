@@ -1,38 +1,67 @@
 import React, { useEffect, useState } from 'react'
 import Header from '../Components/Header'
-import { LineChart } from '@mui/x-charts'
+import { BarChart, BarPlot, ChartContainer, ChartsTooltip, ChartsXAxis, ChartsYAxis, LineChart } from '@mui/x-charts'
 import styles from './ReportPage.module.css'
 import UpdatePopUp from '../Components/UpdatePopUp'
 import { useAuth } from '../contexts/AuthContext'
 import { useParams } from 'react-router-dom'
 import { Button, FloatingLabel, Form, Modal } from 'react-bootstrap'
-import { getCalorieByLimitAPI } from '../services/userServices'
+import { getAllReportAPI, getCalorieByDateAPI, getCalorieByLimitAPI } from '../services/userServices'
 
 function Report() {
 
   const { showUpdatePopUp, setShowUpdatePopUp } = useAuth()
-
-
   // modal
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  // for changing values based on paramaters or url based on report 
   const [checkReportName, setCheckReportName] = useState()
   const { dataName } = useParams()
 
   const [dataS1, setDataS1] = useState()
+  // const [dataS2,setDataS2] = useState()
+  const [dateForCalAnalyze, setDateForCalAnalyze] = useState()
 
-  const getCheckReportName = () => {
-    setCheckReportName(dataName)
+  const [goalCalorie, setGoalCalorie] = useState(0);
+  const [todaysIntake, setTodaysIntake] = useState(0);
+
+
+  // Todays and Target###############3
+  const getAllReport = async () => {
+    try {
+      const result = await getAllReportAPI()
+      const reportData = result.data.response;
+
+
+      // Set goal and today's total
+      setGoalCalorie(reportData[0]?.goal || 0);
+      setTodaysIntake(reportData[0]?.value || 0);
+
+
+
+    } catch (error) {
+      console.log(error.response.data.error);
+
+    }
   }
 
-  const getCalorieByLimit = async (limit) => {
+  // need to fix graph values################3
+  const getCalorieByDate = async (e) => {
+
+    e.preventDefault()
 
     try {
-      console.log(limit);
-      if (limit) {
-        const result = await getCalorieByLimitAPI({ limit })
+
+      if (dateForCalAnalyze) {
+        const neededDate = new Date(dateForCalAnalyze)
+        const jsonDate = neededDate.toJSON()
+        // console.log(neededDate);
+        // console.log(jsonDate);
+
+        const result = await getCalorieByDateAPI(jsonDate)
+        alert(result.data.response);
         const caloriesDataArr = result.data
         // console.log(caloriesDataArr);
 
@@ -53,31 +82,7 @@ function Report() {
             return value
           })
 
-          console.log(valueForXaxis);
-
-
-          // TITLE FOR Y AXIS
-          let titleDatesForY = caloriesDataArr.map((item) => {
-            let dateObj = new Date(item.date)
-            let day = dateObj.getDate();
-            let Month = dateObj.toLocaleString('default', { month: 'short' });
-            let outputTitle = `${Month} Day ${day}`
-            return outputTitle
-          })
-
-          console.log(titleDatesForY);
-
-
-          //   //  complete values for the chart
-          //   setDataS1({
-          //     data: valueForLineChart,
-          //     title: "1 Day Calarie Intake",
-          //     xAxis: {
-          //       data: valueForXaxis, // [18,17,16,15,14]
-          //       label: "Last 5 Days",
-          //       scaleType: "time"
-          //     }
-          //   })
+          // console.log(valueForXaxis);
 
           setDataS1(
             {
@@ -85,62 +90,102 @@ function Report() {
               title: "CALORIE INTAKE",
               xAxis: {
                 data: valueForXaxis,
-                label: `${limit} Entries`,
+                label: `${dateForCalAnalyze} Entries`,
                 scaleType: "time"
               }
             }
           )
-
-        } else {
-          alert("No Records Found!")
         }
+        setDateForCalAnalyze()
+        setShow(false)
+
+
+      } else {
+        alert("Provide Date for Analyze")
+        setShow(false)
 
       }
-      handleClose()
 
 
     } catch (error) {
       console.log(error);
+      setShow(false)
+      setDateForCalAnalyze()
 
     }
 
   }
 
+// GRaph bug fixed!!
+  const getCalorieByLimit = async (limit) => {
+
+    try {
+      // console.log(limit);
+      if (limit) {
+        const result = await getCalorieByLimitAPI({ limit })
+        const caloriesDataArr = result.data
+
+        if (caloriesDataArr) {
+
+          const dataSet = caloriesDataArr.map((item) => {
+            const d = new Date(item.date);
+            const month = d.toLocaleString('default', { month: 'short' })
+            const day = d.getDate();
+            return {
+              label: `${month} ${day}`,
+              month,
+              day,
+              intake: item.quantity
+            }
+          })
+          // dataSet ==>
+          // {label: 'Jun 27', month: 'Jun', day: 27, intake: 100}
+          // {label: 'Jun 27', month: 'Jun', day: 27, intake: 100}
+          // {label: 'Jun 27', month: 'Jun', day: 27, intake: 1000}
+          // {label: 'Jun 22', month: 'Jun', day: 22, intake: 200}
+          // {label: 'Jun 22', month: 'Jun', day: 22, intake: 200}
+          // {label: 'Jun 30', month: 'Jun', day: 30, intake: 100}
+          // {label: 'Jun 30', month: 'Jun', day: 30, intake: 50}
+          // {label: 'Jul 1', month: 'Jul', day: 1, intake: 200}
+
+          const group = {}
+
+          dataSet.forEach((item) => {
+            const { label, month, day, intake } = item
+            if (!group[label]){
+                group[label] = { label, month, day, intake: Number(intake) }
+            }else{
+              group[label].intake += Number(intake)
+            }         
+          })
+
+          const groupedData = Object.values(group)
+          console.log(groupedData);
+          
+
+          setDataS1(groupedData)
+
+        } else {
+          alert("No Records Found!")
+        }
+
+        handleClose()
+      }
 
 
-  // const getChartData = () => {
-  //   let datas = [
-  //     {
-  //       date: 'Wed Jun 18 2025 22:52:01 GMT+0530 (India Standard Time)',
-  //       value: 2000,
-  //       unit: "kcal",
-  //     },
-  //     {
-  //       date: 'Wed Jun 17 2025 22:52:01 GMT+0530 (India Standard Time)',
-  //       value: 2500,
-  //       unit: "kcal",
+    } catch (error) {
+      console.log(error);
+      handleClose()
 
-  //     },
-  //     {
-  //       date: 'Wed Jun 16 2025 22:52:01 GMT+0530 (India Standard Time)',
-  //       value: 3000,
-  //       unit: "kcal",
-  //     },
-  //     {
-  //       date: 'Wed Jun 15 2025 22:52:01 GMT+0530 (India Standard Time)',
-  //       value: 1300,
-  //       unit: "kcal",
-  //     },
-  //     {
-  //       date: 'Wed Jun 14 2025 22:52:01 GMT+0530 (India Standard Time)',
-  //       value: 1200,
-  //       unit: "kcal",
-  //     },
-  //   ]
+    }
+
+  }
+
+  console.log(dataS1);
 
 
 
-  // }
+
 
 
 
@@ -161,190 +206,100 @@ function Report() {
 
 
 
-
-
-
-
   useEffect(() => {
-    // getChartData()
     getCheckReportName()
+    getAllReport()
+
   }, [])
 
+
+
+  const getCheckReportName = () => {
+    setCheckReportName(dataName)
+  }
+
+  const colorPalette = ['#ff7043', '#42a5f5', '#66bb6a', '#ab47bc']; // Orange, Blue, Green, Purple
 
 
   return (
     <div className={`${styles.reportSection}`}>
       <Header />
 
-      <div className='d-flex flex-wrap justify-content-center' style={{ marginTop: "60px" }}>
+      <div className='px-5 d-flex gap-3'>
+        <p className='bg-warning p-1 rounded shadow-sm px-2'>Today's Intake: {todaysIntake}</p>
+        <p className='bg-info p-1 rounded shadow-sm px-2'>Goal Calorie: {goalCalorie}</p>
+
+      </div>
+
+
+      <div className='d-flex flex-column flex-md-row  flex-wrap justify-content-center' style={{ marginTop: "60px" }}>
 
         <div className='section1'>
+
+          <BarChart
+            xAxis={[{ scaleType: 'band', data: ["Today's Intake", "Goal"] }]}
+            series={[
+              {
+                data: [todaysIntake, goalCalorie],
+                label: 'Calories',
+              },
+            ]}
+            palette={['#1976d2', '#ed6c02']} // ✅ Blue for intake, orange for goal
+            height={370}
+            width={500}
+          />
+
+        </div>
+
+
+        <div className='section2'>
+
+
           {
             dataS1 ?
-              <LineChart
-                xAxis={[{
-                  id: "day",
-                  data: dataS1.xAxis.data,
-                  scaleType: dataS1.xAxis.scaleType,
-                  label: dataS1.xAxis.label,
-                  valueFormatter: (date) => {
-                    const d = new Date(date);
-                    return `${d.toLocaleString('default', { month: 'short' })} ${d.getDate()}`;
-                  }
+              <ChartContainer
+                height={400}
+                width={600}
+                dataset={dataS1}
+                colors={colorPalette}
 
-                }]}
                 series={[
                   {
-                    id: "calorie",
-                    data: dataS1.data,
-                    label: dataS1.title,
-                    valueFormatter: (value) => `${value} kcal`
+                    type: 'bar',
+                    dataKey: 'intake',
+                    label: 'Calorie Intake',
                   },
                 ]}
-                height={350}
-                width={700}
-                grid={{ vertical: true, horizontal: true }}
-              />
+                xAxis={[{
+                  id: 'label',
+                  dataKey: 'label',
+                  scaleType: 'band',
+                  label: 'Day',
+                }]}
+                yAxis={[{
+                  label: 'Calories',
+                }]}
+              >
+                <BarPlot />
+                <ChartsXAxis />
+                <ChartsYAxis />
+                <ChartsTooltip />
+              </ChartContainer>
+
 
               :
-              <LineChart
-                xAxis={[{
-                  id: "day",
-                  data: [
-                    "2025-06-21",
-                    "2025-06-22",
-                    "2025-06-23",
-                    "2025-06-24",
-                    "2025-06-25",
-                    "2025-06-26",
-                    "2025-06-27"
-                  ],
-                  scaleType: "time",
-                  label: "Date",
-                  valueFormatter: (date) => {
-                    const d = new Date(date);
-                    return `${d.toLocaleString('default', { month: 'short' })} ${d.getDate()}`;
-                  }
-                }]}
-                series={[
-                  {
-                    id: "calorie",
-                    data: [1800, 1900, 2000, 2200, 2100, 1950, 2050],
-                    label: "ANALYZE A REPORT",
-                    valueFormatter: (value) => `${value} kcal`
-                  },
-                ]}
-                height={350}
-                width={700}
-                grid={{ vertical: true, horizontal: true }}
-              />
 
-
+              <h3>NO broo</h3>
 
           }
-        </div>
-
-        {/* 
-        <div className='section2'>
-          {
-            dataS1 &&
-            <LineChart
-              xAxis={[{
-                id: "day",
-                data: dataS1.xAxis.data,
-                scaleType: dataS1.xAxis.scaleType,
-                label: dataS1.xAxis.label,
-                valueFormatter: (date) => {
-                  const d = new Date(date);
-                  return `${d.toLocaleString('default', { month: 'short' })} ${d.getDate()}`;
-                }
-
-              }]}
-              series={[
-                {
-                  id: "calorie",
-                  data: dataS1.data,
-                  label: dataS1.title,
-                  valueFormatter: (value) => `${value} kcal`
-                },
-              ]}
-              height={350}
-              width={400}
-              grid={{ vertical: true, horizontal: true }}
-            />
 
 
-          }
         </div>
 
 
-        <div className='section3'>
-          {
-            dataS1 &&
-            <LineChart
-              xAxis={[{
-                id: "day",
-                data: dataS1.xAxis.data,
-                scaleType: dataS1.xAxis.scaleType,
-                label: dataS1.xAxis.label,
-                valueFormatter: (date) => {
-                  const d = new Date(date);
-                  return `${d.toLocaleString('default', { month: 'short' })} ${d.getDate()}`;
-                }
-
-              }]}
-              series={[
-                {
-                  id: "calorie",
-                  data: dataS1.data,
-                  label: dataS1.title,
-                  valueFormatter: (value) => `${value} kcal`
-                },
-              ]}
-              height={350}
-              width={400}
-              grid={{ vertical: true, horizontal: true }}
-            />
-
-
-          }
-        </div>
-
-
-        <div className='section4'>
-          {
-            dataS1 &&
-            <LineChart
-              xAxis={[{
-                id: "day",
-                data: dataS1.xAxis.data,
-                scaleType: dataS1.xAxis.scaleType,
-                label: dataS1.xAxis.label,
-                valueFormatter: (date) => {
-                  const d = new Date(date);
-                  return `${d.toLocaleString('default', { month: 'short' })} ${d.getDate()}`;
-                }
-
-              }]}
-              series={[
-                {
-                  id: "calorie",
-                  data: dataS1.data,
-                  label: dataS1.title,
-                  valueFormatter: (value) => `${value} kcal`
-                },
-              ]}
-              height={350}
-              width={400}
-              grid={{ vertical: true, horizontal: true }}
-            />
-
-
-          }
-        </div>
-
- */}
       </div>
+
+
 
 
       <div className='d-flex flex-column gap-4 position-fixed bottom-0 end-0 m-5'>
@@ -383,7 +338,7 @@ function Report() {
               label="Analyze By Date"
               className="mb-3"
             >
-              <Form.Control type="date" placeholder="Recorded Date" />
+              <Form.Control type="date" onChange={e => setDateForCalAnalyze(e.target.value)} placeholder="Recorded Date" />
             </FloatingLabel>
 
             <div
@@ -432,7 +387,7 @@ function Report() {
               Close
             </Button>
             {
-              dataName === "CALORIE INTAKE" && <Button variant="primary">Analyse</Button>
+              dataName === "CALORIE INTAKE" && <Button variant="primary" onClick={getCalorieByDate}>Analyse</Button>
             }
             {
               dataName === "SLEEP" && <Button variant="primary">Analyse</Button>
