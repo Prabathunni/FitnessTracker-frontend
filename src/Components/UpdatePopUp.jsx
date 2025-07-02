@@ -214,8 +214,8 @@ function UpdatePopUp({ reportName, onUpdateSuccess }) {
                                     reportName === "WEIGHT" ?
                                         <div className='WEIGHT'>
                                             <form action="">
-                                                <input type="number" placeholder='weight' className='form-control mb-3' />
-                                                <input type="date" placeholder='Date' className='form-control mb-3' />
+                                                <input type="number" onChange={e=>} placeholder='weight' className='form-control mb-3' required />
+                                                <input type="date" onChange={e=>} placeholder='Date' className='form-control mb-3' required />
 
                                                 <button className='btn btn-success form-control mb-3'>Update Report</button>
                                             </form>

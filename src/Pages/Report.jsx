@@ -7,7 +7,7 @@ import UpdatePopUp from '../Components/UpdatePopUp'
 import { useAuth } from '../contexts/AuthContext'
 import { data, useParams } from 'react-router-dom'
 import { Button, FloatingLabel, Form, Modal } from 'react-bootstrap'
-import { getAllReportAPI, getCalorieByDateAPI, getCalorieByLimitAPI, getSleepByDateAPI, getSleepByLimitAPI, getWaterByLimitAPI } from '../services/userServices'
+import { getAllReportAPI, getCalorieByDateAPI, getCalorieByLimitAPI, getSleepByDateAPI, getSleepByLimitAPI, getWaterByDateAPI, getWaterByLimitAPI } from '../services/userServices'
 
 function Report() {
 
@@ -31,7 +31,7 @@ function Report() {
   const [dataSleepChartS2, setDataSleepChartS2] = useState()
   //CHARTDATA---WATER
   const [dataWaterChart, setDataWaterChart] = useState()
-  // const [dataSleepChartS2, setDataSleepChartS2] = useState()
+  const [dataWaterChartS2, setDataWaterChartS2] = useState()
 
 
   // TOdays value and Goal Value Graph valuess
@@ -415,22 +415,21 @@ function Report() {
         // console.log(neededDate);
         // console.log(jsonDate);
 
-        const result = await getSleepByDateAPI(jsonDate)
+        const result = await getWaterByDateAPI(jsonDate)
         // console.log(result);         
+        const waterDataArray = result.data.response
+        // console.log(waterDataArray);
 
-        const sleepDataArray = result.data.response
-        console.log(sleepDataArray);
+        if (waterDataArray.length > 0) {
 
-        if (sleepDataArray.length > 0) {
+        // { date: '2025-06-25T15:46:30.123Z', waterTakenInMl: 2000, _id: '686132cfab9357b131847d41' }
 
-          // {date: '2025-07-02T00:00:00.000Z', durationInHr: 9, _id: '68658ac91d428e8a6b35885b'}
-
-          const graphData = sleepDataArray.map((item) => ({
+          const graphData = waterDataArray.map((item) => ({
             label: item.date,
-            sleeptHrs: Number(item.durationInHr)
+            waterTakenInMl: Number(item.waterTakenInMl)
           }))
-          console.log(graphData);
-          setDataSleepChart(graphData)
+          // console.log(graphData);
+          setDataWaterChartS2(graphData)
 
         }
 
@@ -687,6 +686,7 @@ function Report() {
 
           {dataS2 && <h3 className='text-center'>Date Analyze Report</h3>}
           {dataSleepChart && <h3 className='text-center'>Date Analyze Report</h3>}
+          {dataSleepChartS2 && <h3 className='text-center'>Date Analyze Report</h3>}
 
           {/* FOR CALORIE -----------------BY DATE */}
           {
@@ -737,7 +737,6 @@ function Report() {
           }
 
           {/* For Sleep by date---------------------- */}
-
           {
             dataSleepChart &&
             <ChartContainer
@@ -761,6 +760,48 @@ function Report() {
                   label: 'Hours Slept',
                   min: 0,
                   max: 10, // Adjust based on expected range
+                },
+              ]}
+              yAxis={[
+                {
+                  id: 'labelAxis',
+                  dataKey: 'label',
+                  scaleType: 'band',
+                },
+              ]}
+            >
+              <BarPlot />
+              <ChartsXAxis />
+              <ChartsYAxis />
+              <ChartsTooltip />
+            </ChartContainer>
+
+          }
+
+          {/* For Water by date---------------------- */}
+          {
+            dataWaterChartS2 &&
+            <ChartContainer
+              width={500}
+              height={120}
+              layout="horizontal"
+              dataset={dataWaterChartS2}
+              series={[
+                {
+                  type: 'bar',
+                  dataKey: 'waterTakenInMl',
+                  label: 'Watertaken in ML',
+                  yAxisKey: 'labelAxis',
+                  layout: 'horizontal',
+                  color: '#42a5f5',
+                },
+              ]}
+              xAxis={[
+                {
+                  scaleType: 'linear',
+                  label: 'Water Intake',
+                  // min: 0,
+                  // max: 3000, // Adjust based on expected range
                 },
               ]}
               yAxis={[
