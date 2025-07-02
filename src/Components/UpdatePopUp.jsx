@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import styles from './Updatepopup.module.css'
 import { ImCross } from 'react-icons/im'
 import { useAuth } from '../contexts/AuthContext';
-import { addCalorieIntakeAPI, addSleepAPI, addWaterAPI } from '../services/userServices';
+import { addCalorieIntakeAPI, addSleepAPI, addWaterAPI, addWeightAPI } from '../services/userServices';
 
 
 function UpdatePopUp({ reportName, onUpdateSuccess }) {
@@ -21,9 +21,13 @@ function UpdatePopUp({ reportName, onUpdateSuccess }) {
     // water
     const [waterTakenInMl, setWaterTakenInMl] = useState()
 
+    // weight
+    const [weight, setWeight] = useState()
+
     const [calorieDataEntries, setCalorieDataEntries] = useState()
     const [sleepDateEntries, setSleepDataEntries] = useState()
     const [waterDataEntries, setWaterDataEntries] = useState()
+    const [weightDataEntries, setWeightDataEntries] = useState()
 
     const addCalorieIntake = async (e) => {
         e.preventDefault()
@@ -133,6 +137,39 @@ function UpdatePopUp({ reportName, onUpdateSuccess }) {
     }
 
 
+    const addWeight = async (e) => {
+        e.preventDefault()
+
+        if (!date || !weight) {
+            alert("Please Provide all inputs")
+        }
+
+        setWeightDataEntries({
+            date: new Date(date),
+            weight
+        })
+
+        try {
+            if (weightDataEntries) {
+                const result = await addWeightAPI(weightDataEntries)
+                console.log(result);
+                alert(result.data.response);
+                setWeightDataEntries(),
+                setDate()
+                setWeight()
+                setShowUpdatePopUp(false)
+                onUpdateSuccess?.();
+
+            }
+
+        } catch (error) {
+            console.log(error.response);
+            setShowUpdatePopUp(false)
+        }
+
+    }
+
+
 
 
 
@@ -214,10 +251,10 @@ function UpdatePopUp({ reportName, onUpdateSuccess }) {
                                     reportName === "WEIGHT" ?
                                         <div className='WEIGHT'>
                                             <form action="">
-                                                <input type="number" onChange={e=>} placeholder='weight' className='form-control mb-3' required />
-                                                <input type="date" onChange={e=>} placeholder='Date' className='form-control mb-3' required />
+                                                <input type="number" onChange={e=>setWeight(e.target.value)} placeholder='weight in Kg' className='form-control mb-3' required />
+                                                <input type="date" onChange={e=>setDate(e.target.value)} placeholder='Date' className='form-control mb-3' required />
 
-                                                <button className='btn btn-success form-control mb-3'>Update Report</button>
+                                                <button onClick={addWeight} className='btn btn-success form-control mb-3'>Update Report</button>
                                             </form>
 
                                         </div>

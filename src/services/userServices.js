@@ -257,4 +257,16 @@ export const getWaterByDateAPI = async (jsonDate) => {
     }
 }
 
+// add weight api
+export const addWeightAPI = async (weightEntries) => {
+    try {
+        const result =await axios.post(`${server_url}/addweight`, weightEntries, {withCredentials: true})
+        return result
+    } catch (error) {
+        console.log(error);
+        throw error 
+    }
+}
+
+
 
