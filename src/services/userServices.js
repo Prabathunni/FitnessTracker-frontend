@@ -196,3 +196,21 @@ export const getSleepByDateAPI = async (jsonDate) => {
         
     }
 }
+
+
+// get sleep by limit api
+export const getSleepByLimitAPI = async (limit) => {
+
+    try {
+
+        const result =await axios.post(`${server_url}/sleepbylimit`, limit , {withCredentials: true} )
+        return result
+        
+        
+    } catch (error) {
+        console.log(error);
+        throw error
+        
+    }
+    
+}

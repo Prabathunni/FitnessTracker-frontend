@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import Header from '../Components/Header'
-import { CircularProgress, Typography, Box, duration } from '@mui/material';
-import { BarChart, BarPlot, ChartContainer, ChartsTooltip, ChartsXAxis, ChartsYAxis } from '@mui/x-charts'
+import { CircularProgress, Typography, Box } from '@mui/material';
+import { BarPlot, ChartContainer, ChartsTooltip, ChartsXAxis, ChartsYAxis } from '@mui/x-charts'
 import styles from './ReportPage.module.css'
 import UpdatePopUp from '../Components/UpdatePopUp'
 import { useAuth } from '../contexts/AuthContext'
-import { useParams } from 'react-router-dom'
+import { data, useParams } from 'react-router-dom'
 import { Button, FloatingLabel, Form, Modal } from 'react-bootstrap'
-import { getAllReportAPI, getCalorieByDateAPI, getCalorieByLimitAPI, getSleepByDateAPI } from '../services/userServices'
+import { getAllReportAPI, getCalorieByDateAPI, getCalorieByLimitAPI, getSleepByDateAPI, getSleepByLimitAPI } from '../services/userServices'
 
 function Report() {
 
@@ -28,6 +28,7 @@ function Report() {
   const [dataS2, setDataS2] = useState() //----------------for date data
 
   const [dataSleepChart, setDataSleepChart] = useState()
+  const [dataSleepChartS2, setDataSleepChartS2] = useState()
 
 
   // TOdays value and Goal Value Graph valuess
@@ -263,7 +264,70 @@ function Report() {
 
 
   const getSleepByLimit = async (limit) => {
-    console.log("In sleeep", limit);
+
+    try {
+      console.log(limit);
+      if (limit) {
+        const result = await getSleepByLimitAPI({ limit })
+        const sleepDataArray = result.data
+
+        console.log(sleepDataArray);
+
+        // { date: '2025-06-28T09:00:00.000Z', durationInHr: 7, _id: '6861313bb8481096ddb4dd03' }
+        // { date: '2025-06-01T09:00:00.000Z', durationInHr: 7, _id: '6863cc12a5de80c9a6a799fd' }
+        // { date: '2025-06-03T09:00:00.000Z', durationInHr: 6, _id: '6863cc2ca5de80c9a6a79a06' }
+
+        if (sleepDataArray) {
+
+          const dataSet = sleepDataArray.map((item) => {
+            const d = new Date(item.date);
+            const month = d.toLocaleString('default', { month: 'short' })
+            const day = d.getDate();
+            return {
+              label: `${month} ${day}`,
+              month,
+              day,
+              sleeptHrs: Number(item.durationInHr)
+            }
+          })
+          // dataSet ==>
+          // {label: 'Jun 27', month: 'Jun', day: 27, intake: 100}
+          // {label: 'Jun 27', month: 'Jun', day: 27, intake: 100}
+          // {label: 'Jun 27', month: 'Jun', day: 27, intake: 1000}
+          // {label: 'Jun 22', month: 'Jun', day: 22, intake: 200}
+          // {label: 'Jun 22', month: 'Jun', day: 22, intake: 200}
+          // {label: 'Jun 30', month: 'Jun', day: 30, intake: 100}
+          // {label: 'Jun 30', month: 'Jun', day: 30, intake: 50}
+          // {label: 'Jul 1', month: 'Jul', day: 1, intake: 200}
+
+          const group = {}
+
+          dataSet.forEach((item) => {
+            const { label, month, day, sleeptHrs } = item
+            if (!group[label]) {
+              group[label] = { label, month, day, sleeptHrs: Number(item.sleeptHrs) }
+            } else {
+              group[label].sleeptHrs += Number(sleeptHrs)
+            }
+          })
+
+          const groupedData = Object.values(group)
+          // console.log(groupedData);
+          setDataSleepChartS2(groupedData)
+
+        } else {
+          alert("No Records Found!")
+        }
+
+        handleClose()
+      }
+
+
+    } catch (error) {
+      console.log(error);
+      handleClose()
+
+    }
 
   }
 
@@ -387,6 +451,7 @@ function Report() {
         <div className='section2 d-flex justify-content-center align-items-center'>
 
           {dataS1 && <h3 className='text-center'>Analyze Report</h3>}
+          {dataSleepChartS2 && <h3 className='text-center'>Analyze Report</h3>}
 
           {
             dataS1 &&
@@ -420,18 +485,19 @@ function Report() {
           }
 
           {/* SLEEP ----------bY LIMIT--------------------------- */}
+
           {
-            dataS1 &&
+            dataSleepChartS2 &&
             <ChartContainer
               height={400}
-              dataset={dataS1}
+              dataset={dataSleepChartS2}
               colors={colorPalette}
 
               series={[
                 {
                   type: 'bar',
-                  dataKey: 'intake',
-                  label: 'Calorie Intake',
+                  dataKey: 'sleeptHrs',
+                  label: 'Hours Slept',
                 },
               ]}
               xAxis={[{
@@ -441,7 +507,7 @@ function Report() {
                 label: 'Day',
               }]}
               yAxis={[{
-                label: 'Calories',
+                label: 'Sleep in Hrs',
               }]}
             >
               <BarPlot />
