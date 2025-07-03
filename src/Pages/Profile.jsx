@@ -66,10 +66,9 @@ function Profile() {
   return (
     <div >
       <Header />
-      <div className='vh-100 row  d-flex justify-content-center align-items-center'>
+      <div className='vh-100 d-flex justify-content-center align-items-center'>
 
-        <div className='col-lg-4'> </div>
-        <div className='col-lg-4  text-center text-white'>
+        <div className='text-dark bg-light w-25 p-5 rounded shadow' style={{minHeight:"300px"}}>
           {/* <img width="240" height="240" className='rounded' src="https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg?uid=R188092662&ga=GA1.1.372816841.1746347166&semt=ais_hybrid&w=740" alt="user" />
           <hr /> */}
           <h3 className=''>{name}</h3>
@@ -92,7 +91,6 @@ function Profile() {
 
 
         </div>
-        <div className='col-lg-4'> </div>
 
       </div>
     </div>

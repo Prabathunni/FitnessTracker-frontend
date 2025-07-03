@@ -1,6 +1,7 @@
 import axios from 'axios'
 
-let server_url = "http://localhost:4000"
+const server_url="http://localhost:4000"
+
 
 // register API
 export const registerAPI = async(userData) =>{

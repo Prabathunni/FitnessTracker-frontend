@@ -635,14 +635,14 @@ function Report() {
                 {
                   type: 'bar',
                   dataKey: 'value',
-                  label: 'Calories',
+                  label: '',
                   yAxisKey: 'labelAxis',
                   layout: 'horizontal',
                 },
               ]}
               xAxis={[{
                 scaleType: 'linear',
-                label: 'Calories',
+                label: 'TARGET',
               }]}
               yAxis={[{
                 id: 'labelAxis',
