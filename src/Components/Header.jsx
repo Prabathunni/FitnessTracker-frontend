@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import Auth from './Auth'
 import { useAuth } from '../contexts/AuthContext'
 import { getUserDetailsAPI, logoutUserApi } from '../services/userServices'
+import { toast, ToastContainer } from 'react-toastify'
 
 
 function Header() {
@@ -12,7 +13,7 @@ function Header() {
   const { showPopUp } = useAuth()
   const navigate = useNavigate()
 
-  const [name,setName] = useState()
+  const [name, setName] = useState()
 
 
   const logoutUser = async () => {
@@ -21,8 +22,12 @@ function Header() {
     if (isConfirm) {
       try {
         await logoutUserApi()
-        setIsUserLogged(false)
-        navigate('/')
+        toast.success("Logging Out...")
+        setTimeout(() => {
+          setIsUserLogged(false)
+          navigate('/')
+        }, 2000);
+
       } catch (error) {
         console.log("logging out failed", error);
       }
@@ -36,20 +41,20 @@ function Header() {
       const result = await getUserDetailsAPI()
       // console.log(result.data);
       setName(result.data.name)
-      
+
     } catch (error) {
       console.log(error);
-      
+
     }
   }
 
-  
 
 
 
-  useEffect(()=>{
+
+  useEffect(() => {
     userDetailsFetch()
-  },[])
+  }, [])
 
 
 
@@ -67,13 +72,13 @@ function Header() {
           <Dropdown >
             <Dropdown.Toggle className='px-3' variant="danger" id="dropdown-basic" size='sm' >
 
-                <img
-                  src="https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg?uid=R188092662&ga=GA1.1.372816841.1746347166&semt=ais_hybrid&w=740"
-                  alt="User"
-                  width="40"
-                  height="40"
-                  className="rounded-circle d-none d-md-inline"
-                /><span className='px-1'> Hello {name}</span>
+              <img
+                src="https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg?uid=R188092662&ga=GA1.1.372816841.1746347166&semt=ais_hybrid&w=740"
+                alt="User"
+                width="40"
+                height="40"
+                className="rounded-circle d-none d-md-inline"
+              /><span className='px-1'> Hello {name}</span>
 
             </Dropdown.Toggle>
 
@@ -93,6 +98,19 @@ function Header() {
       {
         showPopUp && <Auth />
       }
+
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
 
 
     </div>

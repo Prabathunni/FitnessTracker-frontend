@@ -2,6 +2,7 @@ import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { logoutAdminAPI } from '../services/userServices'
 import { useAuth } from '../contexts/AuthContext'
+import { toast } from 'react-toastify'
 
 
 function AdminSidePanel() {
@@ -18,7 +19,9 @@ function AdminSidePanel() {
       setIsUserLogged(false)
       navigate('/')
     } catch (error) {
-      console.log(error);
+      // console.log(error);
+      toast.error(error.response.data.message)
+      
 
     }
     }

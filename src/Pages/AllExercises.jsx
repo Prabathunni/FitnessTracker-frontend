@@ -5,6 +5,7 @@ import { addExerciseByWorkoutIdAPI, deleteAExerciseByIdSAPI, getAllExercisesByWo
 import { Button, Card, ListGroup, Modal } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
+import { toast, ToastContainer } from 'react-toastify';
 
 
 function AllExercises() {
@@ -62,18 +63,18 @@ function AllExercises() {
 
         try {
 
-            const result = await updateAExerciseAPI(workoutId,editId, updateDate)
-            alert(result.data.response);
+            const result = await updateAExerciseAPI(workoutId, editId, updateDate)
+            toast.success(result.data.response);
             handleClose()
-            
-            
+
+
         } catch (error) {
             console.log(error);
-            if(error.status===404){
-                alert(error.response.data.response)
+            if (error.status === 404) {
+                toast.error(error.response.data.response)
             }
             handleClose()
-            
+
         }
 
     }
@@ -81,7 +82,7 @@ function AllExercises() {
 
     const addExercise = async () => {
         if (!exerciseName || !gifLink || !description || !sets || !reps || !rest) {
-            alert("Provide All inputs...")
+            toast.warning("Provide All inputs...")
             return;
         }
 
@@ -96,10 +97,12 @@ function AllExercises() {
 
         try {
             const result = await addExerciseByWorkoutIdAPI(workoutId, newData)
-            console.log(result);
-            alert(result.data.response)
+            // console.log(result);
+            toast.success(result.data.response)
             handleClose()
-            getAllExercises()
+            setTimeout(() => {
+                getAllExercises()
+            }, 2000);
 
         } catch (error) {
             console.log(error);
@@ -116,7 +119,7 @@ function AllExercises() {
         if (confirmation) {
             try {
                 const result = await deleteAExerciseByIdSAPI(workoutId, exerciseId)
-                alert(result.data.response)
+                toast.warning(result.data.response)
                 getAllExercises()
             } catch (error) {
                 console.log(error);
@@ -135,7 +138,7 @@ function AllExercises() {
         } catch (error) {
             console.log(error);
             if (error.status === 404) {
-                alert(error.response.data.response)
+                toast.error(error.response.data.response)
                 return
             }
 
@@ -257,6 +260,22 @@ function AllExercises() {
                     <Button variant="success" onClick={editId ? updateExercise : addExercise}>{editId ? "Update" : "Add"}</Button>
                 </Modal.Footer>
             </Modal>
+
+
+
+            <ToastContainer
+                position="top-right"
+                autoClose={2000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick={false}
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
+
 
 
 

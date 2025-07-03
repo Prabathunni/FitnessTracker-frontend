@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { adminLoginAPI } from '../services/userServices'
 import { useAuth } from '../contexts/AuthContext';
+import { ToastContainer, toast } from 'react-toastify';
+
 
 function AdminLogin() {
 
@@ -19,7 +21,7 @@ function AdminLogin() {
         e.preventDefault()
 
         if (!email || !password) {
-            alert("Provide All inputs")
+            toast.warning("Provide All inputs")
         }
 
         setAdminData({
@@ -30,9 +32,9 @@ function AdminLogin() {
         try {
 
             if (adminData) {
-                const result = await adminLoginAPI(adminData)
-                alert("Admin Authenticated")
-                console.log(result);
+                await adminLoginAPI(adminData)
+                toast.success("Admin Authenticated")
+                // console.log(result);
                 setIsUserLogged(true)
                 navigate('/admin')
                 setAdminData()
@@ -43,8 +45,8 @@ function AdminLogin() {
 
         } catch (error) {
             console.log(error);
-            if(error.status===404){
-                alert(error.response.data)
+            if (error.status === 404) {
+                toast.error(error.response.data)
             }
         }
     }
@@ -58,14 +60,27 @@ function AdminLogin() {
                 <hr />
 
                 <form onSubmit={loginAdmin}>
-                    <input type="text" value={email} placeholder='admin mailID'  onChange={e => setEmail(e.target.value)} className='form-control mb-3' required />
-                    <input type="password" value={password} placeholder='admin password'  onChange={e => setPassword(e.target.value)} className='form-control mb-3' required />
+                    <input type="text" value={email} placeholder='admin mailID' onChange={e => setEmail(e.target.value)} className='form-control mb-3' required />
+                    <input type="password" value={password} placeholder='admin password' onChange={e => setPassword(e.target.value)} className='form-control mb-3' required />
                     <input type="submit" value="Authenticate" className='form-control btn btn-danger mb-3' />
 
                     <p>not an Admin? <Link to="/">Go Back to Home</Link></p>
                 </form>
 
             </div>
+
+            <ToastContainer
+                position="top-left"
+                autoClose={2000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick={false}
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
 
         </div>
     )

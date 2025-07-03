@@ -3,6 +3,7 @@ import styles from './Updatepopup.module.css'
 import { ImCross } from 'react-icons/im'
 import { useAuth } from '../contexts/AuthContext';
 import { addCalorieIntakeAPI, addSleepAPI, addWaterAPI, addWeightAPI } from '../services/userServices';
+import { toast, ToastContainer } from 'react-toastify';
 
 
 function UpdatePopUp({ reportName, onUpdateSuccess }) {
@@ -33,7 +34,7 @@ function UpdatePopUp({ reportName, onUpdateSuccess }) {
         e.preventDefault()
 
         if (!item || !quantity || !unit || !date) {
-            alert("Please fill all fields");
+            toast.warning("Please fill all fields");
             return;
         }
         setCalorieDataEntries({
@@ -47,7 +48,7 @@ function UpdatePopUp({ reportName, onUpdateSuccess }) {
 
             if (calorieDataEntries) {
                 const result = await addCalorieIntakeAPI(calorieDataEntries)
-                alert(result.data.response);
+                toast.success(result.data.response);
                 setCalorieDataEntries(),
                     setItem(""),
                     setQuantity(),
@@ -72,7 +73,7 @@ function UpdatePopUp({ reportName, onUpdateSuccess }) {
         e.preventDefault()
 
         if (!date || !durationInHr) {
-            alert("Please Provide all inputs")
+            toast.warning("Please Provide all inputs")
         }
 
         setSleepDataEntries({
@@ -84,7 +85,7 @@ function UpdatePopUp({ reportName, onUpdateSuccess }) {
             if (sleepDateEntries) {
                 const result = await addSleepAPI(sleepDateEntries)
                 // console.log(result);
-                alert(result.data.response);
+                toast.success(result.data.response);
                 setSleepDataEntries(),
                     setDate()
                 setDurationInHr()
@@ -106,7 +107,7 @@ function UpdatePopUp({ reportName, onUpdateSuccess }) {
         e.preventDefault()
 
         if (!date || !waterTakenInMl) {
-            alert("Please Provide all inputs")
+            toast.warning("Please Provide all inputs")
         }
 
         setWaterDataEntries({
@@ -117,8 +118,8 @@ function UpdatePopUp({ reportName, onUpdateSuccess }) {
         try {
             if (waterDataEntries) {
                 const result = await addWaterAPI(waterDataEntries)
-                console.log(result);
-                alert(result.data.response);
+                // console.log(result);
+                toast.success(result.data.response);
                 setWaterDataEntries(),
                 setDate()
                 setWaterTakenInMl()
@@ -141,7 +142,7 @@ function UpdatePopUp({ reportName, onUpdateSuccess }) {
         e.preventDefault()
 
         if (!date || !weight) {
-            alert("Please Provide all inputs")
+            toast.success("Please Provide all inputs")
         }
 
         setWeightDataEntries({
@@ -152,8 +153,8 @@ function UpdatePopUp({ reportName, onUpdateSuccess }) {
         try {
             if (weightDataEntries) {
                 const result = await addWeightAPI(weightDataEntries)
-                console.log(result);
-                alert(result.data.response);
+                // console.log(result);
+                toast.success(result.data.response);
                 setWeightDataEntries(),
                 setDate()
                 setWeight()
@@ -165,6 +166,9 @@ function UpdatePopUp({ reportName, onUpdateSuccess }) {
         } catch (error) {
             console.log(error.response);
             setShowUpdatePopUp(false)
+            if(error.status===404){
+                toast.error(error.response.data.response)
+            }
         }
 
     }
@@ -272,6 +276,18 @@ function UpdatePopUp({ reportName, onUpdateSuccess }) {
             </div>
 
 
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
 
 
 

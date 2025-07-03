@@ -5,7 +5,7 @@ import logo from '/heart-rate.png'
 import { ImCross } from 'react-icons/im'
 import { useAuth } from '../contexts/AuthContext'
 import { loginAPI, registerAPI } from '../services/userServices'
-
+import { ToastContainer, toast } from 'react-toastify';
 
 function Auth() {
 
@@ -59,17 +59,15 @@ function Auth() {
     try {
 
       const res = await registerAPI(userData)
-      console.log(res);
+      // console.log(res);
       setIsRegister(false)
-      alert("Registered  successfully...")
+      toast.success("Registered  successfully...")
       resetForm()
-
-
 
     } catch (error) {
 
-      console.log(error);
-      alert(error.response.data)
+      // console.log(error);
+      toast.error(error.response.data)
 
 
     }
@@ -93,19 +91,22 @@ function Auth() {
       const result = await loginAPI(credentials)
 
       if (result) {
-        sessionStorage.setItem("userData", result.data.existingUser.name)
+        // sessionStorage.setItem("userData", result.data.existingUser.name)
         resetForm()
-        setIsUserLogged(true)
-        setShowPopUp(false)
-        alert("login successfull")
+        toast.success("Logging In Please Wait")
+
+        setTimeout(() => {
+          setIsUserLogged(true)
+          setShowPopUp(false)
+
+        }, 2000);
+
       } else {
-        alert("Login Failed")
+        toast.error("Login Failed")
       }
 
-
-
     } catch (error) {
-      alert(error.response.data)
+      toast.error(error.response.data)
 
     }
 
@@ -251,6 +252,18 @@ function Auth() {
       }
 
 
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
 
     </div>
   )

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import AdminSidePanel from '../Components/AdminSidePanel'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { Button, Card } from 'react-bootstrap'
+import { Card } from 'react-bootstrap'
 import { deleteUserByidAPI, getaUSerByIdAPI } from '../services/userServices';
+import { toast, ToastContainer } from 'react-toastify';
 
 function ViewUser() {
 
@@ -23,20 +24,21 @@ function ViewUser() {
         }
     }
     console.log(userData);
-    
+
 
     const deleteUser = async (userID) => {
         const confirmDelete = window.confirm("Proceed to delete user:")
-        
-        if(confirmDelete){
+
+        if (confirmDelete) {
             try {
                 const result = await deleteUserByidAPI(userID)
-                alert(result.data.response || "User Deleted Successfully")
+                toast.success(result.data.response || "User Deleted Successfully")
                 navigate('/allusers')
 
             } catch (error) {
-                console.log(error);
-                
+                // console.log(error);
+                toast.error(error.response.data.response)
+
             }
         }
 
@@ -64,13 +66,13 @@ function ViewUser() {
                             <Card.Body>
                                 <Card.Title>User Name : {userData?.name}</Card.Title>
 
-                                    <div className='mt-4'>
-                                        <h6>Email Address: <span style={{textDecoration:"underline"}}>{userData?.email}</span></h6>
-                                        <h6>Gender: <span style={{textDecoration:"underline"}}>{userData?.gender}</span></h6>
-                                        <h6>AGE: <span style={{textDecoration:"underline"}}>{userData?.age}</span></h6>
-                                        <h6>GOAL: <span style={{textDecoration:"underline"}}>{userData?.goal}</span></h6>
-                                        <h6>ACTIVTY LEVEL: <span style={{textDecoration:"underline"}}>{userData?.activityLevel}</span></h6>
-                                    </div>
+                                <div className='mt-4'>
+                                    <h6>Email Address: <span style={{ textDecoration: "underline" }}>{userData?.email}</span></h6>
+                                    <h6>Gender: <span style={{ textDecoration: "underline" }}>{userData?.gender}</span></h6>
+                                    <h6>AGE: <span style={{ textDecoration: "underline" }}>{userData?.age}</span></h6>
+                                    <h6>GOAL: <span style={{ textDecoration: "underline" }}>{userData?.goal}</span></h6>
+                                    <h6>ACTIVTY LEVEL: <span style={{ textDecoration: "underline" }}>{userData?.activityLevel}</span></h6>
+                                </div>
 
 
                             </Card.Body>
@@ -78,7 +80,7 @@ function ViewUser() {
                                 <div className='d-flex justify-content-between'>
                                     <p>Account Created In: <span className='ms-2'> {userData?.createdAt} </span></p>
 
-                                    <button onClick={()=>deleteUser(userData?._id)} className='btn btn-danger btn-sm'>Delete User <i className="fa-solid fa-trash ms-2"></i></button>
+                                    <button onClick={() => deleteUser(userData?._id)} className='btn btn-danger btn-sm'>Delete User <i className="fa-solid fa-trash ms-2"></i></button>
                                 </div>
                             </Card.Footer>
                         </Card>
@@ -88,6 +90,18 @@ function ViewUser() {
                 </div>
             </div>
 
+            <ToastContainer
+                position="top-right"
+                autoClose={2000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick={false}
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
 
 
         </div>

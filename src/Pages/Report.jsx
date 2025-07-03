@@ -8,6 +8,7 @@ import { useAuth } from '../contexts/AuthContext'
 import { useParams } from 'react-router-dom'
 import { Button, FloatingLabel, Form, Modal } from 'react-bootstrap'
 import { getAllReportAPI, getCalorieByDateAPI, getCalorieByLimitAPI, getSleepByDateAPI, getSleepByLimitAPI, getWaterByDateAPI, getWaterByLimitAPI, getWeightByDateAPI, getWeightByLimitAPI } from '../services/userServices'
+import { toast, ToastContainer } from 'react-toastify';
 
 function Report() {
 
@@ -49,9 +50,7 @@ function Report() {
     try {
       const result = await getAllReportAPI()
       const reportData = result.data.response;
-      console.log(reportData);
-
-
+      // console.log(reportData);
 
       if (dataName === 'CALORIE INTAKE') {
 
@@ -112,7 +111,7 @@ function Report() {
         const result = await getCalorieByDateAPI(jsonDate)
         // console.log(result.data.response);                 //------------------bug found giving undefined at first**fixed!!!!
         const warningMessage = result.data.response
-        warningMessage && alert(warningMessage)
+        warningMessage && toast.success(warningMessage)
 
         const caloriesDataArr = result.data
 
@@ -135,7 +134,7 @@ function Report() {
 
 
       } else {
-        alert("Provide Date for Analyze")
+        toast.warning("Provide Date for Analyze")
         setShow(false)
 
       }
@@ -143,7 +142,7 @@ function Report() {
     } catch (error) {
       console.log(error);
       if (error.status === 404) {
-        alert(error.response.data.response)
+        toast.error(error.response.data.response)
       }
 
       setShow(false)
@@ -201,7 +200,7 @@ function Report() {
           setDataS1(groupedData)
 
         } else {
-          alert("No Records Found!")
+          toast.warning("No Records Found!")
         }
 
         handleClose()
@@ -209,9 +208,9 @@ function Report() {
 
 
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       if (error.status === 404) {
-        alert(error.response.data.response)
+        toast.error(error.response.data.response)
       }
       handleClose()
 
@@ -257,19 +256,19 @@ function Report() {
 
 
       } else {
-        alert("Provide Date for Analyze")
+        toast.warning("Provide Date for Analyze")
         setShow(false)
 
       }
 
 
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       setShow(false)
       setDateForAnalyze()
 
       if (error.response.status === 404) {
-        alert(error.response.data.response)
+        toast.error(error.response.data.response)
       }
 
 
@@ -285,9 +284,7 @@ function Report() {
       if (limit) {
         const result = await getSleepByLimitAPI({ limit })
         const sleepDataArray = result.data
-
-        console.log(sleepDataArray);
-
+        // console.log(sleepDataArray);
         // { date: '2025-06-28T09:00:00.000Z', durationInHr: 7, _id: '6861313bb8481096ddb4dd03' }
         // { date: '2025-06-01T09:00:00.000Z', durationInHr: 7, _id: '6863cc12a5de80c9a6a799fd' }
         // { date: '2025-06-03T09:00:00.000Z', durationInHr: 6, _id: '6863cc2ca5de80c9a6a79a06' }
@@ -331,17 +328,16 @@ function Report() {
           setDataSleepChartS2(groupedData)
 
         } else {
-          alert("No Records Found!")
+          toast.warning("No Records Found!")
         }
 
         handleClose()
       }
 
-
+      // Bugg found toast not closing **************
     } catch (error) {
-      console.log(error);
-      if (error.status === 404) {
-        alert(error.response.data.response)
+      if (error.response.data.response) {
+        toast.error(error.response.data.response)
       }
       handleClose()
 
@@ -404,18 +400,14 @@ function Report() {
           setDataWaterChart(groupedData)
 
         } else {
-          alert("No Records Found!")
+          toast.warning("No Records Found!")
         }
 
         handleClose()
       }
 
     } catch (error) {
-      console.log(error);
-      if (error.status === 404) {
-        alert(error.response.data.response)
-      }
-
+      toast.error(error.response.data.response || "Something went wrong")
       handleClose()
     }
   }
@@ -454,16 +446,16 @@ function Report() {
 
 
       } else {
-        alert("Provide Date for Analyze")
+        toast.warning("Provide Date for Analyze")
         setShow(false)
 
       }
 
 
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       if (error.response.status === 404) {
-        alert(error.response.data.response)
+        toast.error(error.response.data.response)
       }
 
       setShow(false)
@@ -521,7 +513,7 @@ function Report() {
           setDataWeightChart(groupedData)
 
         } else {
-          alert("No Records Found!")
+          toast.warning("No Records Found!")
         }
 
         handleClose()
@@ -530,7 +522,7 @@ function Report() {
     } catch (error) {
       console.log(error);
       if (error.status === 404) {
-        alert(error.response.data.response)
+        toast.error(error.response.data.response)
       }
       handleClose()
     }
@@ -571,7 +563,7 @@ function Report() {
 
 
       } else {
-        alert("Provide Date for Analyze")
+        toast.warning("Provide Date for Analyze")
         setShow(false)
 
       }
@@ -582,7 +574,7 @@ function Report() {
       setShow(false)
       setDateForAnalyze()
       if (error.response.status === 404) {
-        alert(error.response.data.response)
+        toast.error(error.response.data.response)
       }
     }
   }
@@ -1126,6 +1118,19 @@ function Report() {
         </Modal.Body>
       </Modal>
 
+
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
 
 
 
