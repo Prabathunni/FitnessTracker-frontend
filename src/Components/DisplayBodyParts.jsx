@@ -1,9 +1,10 @@
-import React from 'react'
+import React  from 'react'
 import { Link } from 'react-router-dom'
 import styles from './Auth.module.css'
 
 
 function DisplayBodyParts({ item }) {
+
     return (
         <div>
             <div className={styles.workoutCard}

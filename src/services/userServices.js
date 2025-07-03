@@ -442,6 +442,20 @@ export const deleteAExerciseByIdSAPI = async(workoutId,exerciseId)=>{
     }
 }
 
+// update a exercise by id via workout id
+export const updateAExerciseAPI = async(workoutId,exerciseId, updatedDate)=>{
+    try {
+
+        const result = await axios.put(`${server_url}/workout/${workoutId}/exercises/${exerciseId}`, updatedDate, {withCredentials: true} )
+        return result
+        
+    } catch (error) {
+        console.log("Status:",error.response.status, error.response.data);
+        throw error
+        
+    }
+}
+
 
 
 

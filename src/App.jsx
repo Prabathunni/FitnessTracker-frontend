@@ -7,6 +7,7 @@ import HomePage from './Pages/HomePage'
 import LayoutWithFooter from './Components/LayoutWithFooter'
 import AdminPage from './Pages/AdminPage'
 import AppRoutes from './Routes/AppRoutes'
+import ScrollToTop from './Components/ScrollToTop'
 
 function App() {
 
@@ -14,6 +15,8 @@ function App() {
     <>
 
       <AuthProvider>
+
+        <ScrollToTop/>
 
         <AppRoutes/>
 

@@ -42,6 +42,7 @@ function HomePage() {
 
     useEffect(() => {
 
+
         getAllMuscleGroup()
 
     }, [])

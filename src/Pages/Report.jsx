@@ -142,6 +142,10 @@ function Report() {
 
     } catch (error) {
       console.log(error);
+      if (error.status === 404) {
+        alert(error.response.data.response)
+      }
+
       setShow(false)
       setDateForAnalyze()
     }
@@ -206,6 +210,9 @@ function Report() {
 
     } catch (error) {
       console.log(error);
+      if (error.status === 404) {
+        alert(error.response.data.response)
+      }
       handleClose()
 
     }
@@ -333,12 +340,14 @@ function Report() {
 
     } catch (error) {
       console.log(error);
+      if (error.status === 404) {
+        alert(error.response.data.response)
+      }
       handleClose()
 
     }
 
   }
-
 
 
   // _________________________________________________-WATER FUNCITONS_____________
@@ -403,6 +412,10 @@ function Report() {
 
     } catch (error) {
       console.log(error);
+      if (error.status === 404) {
+        alert(error.response.data.response)
+      }
+
       handleClose()
     }
   }
@@ -449,12 +462,12 @@ function Report() {
 
     } catch (error) {
       console.log(error);
-      setShow(false)
-      setDateForAnalyze()
-
       if (error.response.status === 404) {
         alert(error.response.data.response)
       }
+
+      setShow(false)
+      setDateForAnalyze()
 
 
     }
@@ -516,6 +529,9 @@ function Report() {
 
     } catch (error) {
       console.log(error);
+      if (error.status === 404) {
+        alert(error.response.data.response)
+      }
       handleClose()
     }
 
@@ -565,12 +581,9 @@ function Report() {
       console.log(error);
       setShow(false)
       setDateForAnalyze()
-
       if (error.response.status === 404) {
         alert(error.response.data.response)
       }
-
-
     }
   }
 
