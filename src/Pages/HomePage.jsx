@@ -25,16 +25,17 @@ function HomePage() {
 
 
     const getAllMuscleGroup = async () => {
-        try {
+        if (isUserLogged) {
+            try {
+                const result = await getAllWorkoutsAPI()
+                const muscleData = result.data.response;
+                // console.log(muscleData);
+                setWorkout(muscleData)
 
-            const result = await getAllWorkoutsAPI()
-            const muscleData = result.data.response;
-            // console.log(muscleData);
-            setWorkout(muscleData)
+            } catch (error) {
+                console.log(error);
+            }
 
-
-        } catch (error) {
-            console.log(error);
         }
     }
 

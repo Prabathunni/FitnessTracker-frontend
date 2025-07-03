@@ -315,6 +315,144 @@ export const getUserDetailsAPI = async()=>{
 }
 
 
+// ________________________admin side
+// LOGIN Admin API
+export const adminLoginAPI = async(credentials)=>{
+    try {
+
+        const result = await axios.post(`${server_url}/loginadmin`, credentials, {withCredentials: true} )
+        return result
+        
+    } catch (error) {
+        console.log("Status:",error.response.status, error.response.data);
+        throw error
+        
+    }
+}
+
+// Get ALL Users 
+export const getAllUSersAPI = async()=>{
+    try {
+
+        const result = await axios.get(`${server_url}/users`, {withCredentials: true} )
+        return result
+        
+    } catch (error) {
+        console.log("Status:",error.response.status, error.response.data);
+        throw error
+        
+    }
+}
+
+// Get User By ID 
+export const getaUSerByIdAPI = async(id)=>{
+    try {
+
+        const result = await axios.get(`${server_url}/users/user/${id}`, {withCredentials: true} )
+        return result
+        
+    } catch (error) {
+        console.log("Status:",error.response.status, error.response.data);
+        throw error
+        
+    }
+}
+
+// delete a user by id
+export const deleteUserByidAPI = async(id)=>{
+    try {
+
+        const result = await axios.delete(`${server_url}/users/${id}`, {withCredentials: true} )
+        return result
+        
+    } catch (error) {
+        console.log("Status:",error.response.status, error.response.data);
+        throw error
+        
+    }
+}
+
+
+// Logout Admin 
+export const logoutAdminAPI = async()=>{
+    try {
+
+        const result = await axios.get(`${server_url}/logoutadmin`, {withCredentials: true} )
+        return result
+        
+    } catch (error) {
+        console.log("Status:",error.response.status, error.response.data);
+        throw error
+        
+    }
+}
+
+// Get ALL workouts 
+export const getAllMucleWorkoutsAPI = async()=>{
+    try {
+
+        const result = await axios.get(`${server_url}/workout`, {withCredentials: true} )
+        return result
+        
+    } catch (error) {
+        console.log("Status:",error.response.status, error.response.data);
+        throw error
+        
+    }
+}
+
+
+// Get Exercises By muscleworkout ID 
+export const getAllExercisesByWorkoutIDAPI = async(id)=>{
+    try {
+
+        const result = await axios.get(`${server_url}/workout/${id}/exercises`, {withCredentials: true} )
+        return result
+        
+    } catch (error) {
+        console.log("Status:",error.response.status, error.response.data);
+        throw error
+        
+    }
+}
+
+// add exercis api by workout id
+export const addExerciseByWorkoutIdAPI = async (id, exerciseData) => {
+    try {
+        const result =await axios.post(`${server_url}/workout/${id}`, exerciseData, {withCredentials: true})
+        return result
+    } catch (error) {
+        console.log(error);
+        throw error 
+    }
+}
+
+
+// delete a exercise by id via workout id
+export const deleteAExerciseByIdSAPI = async(workoutId,exerciseId)=>{
+    try {
+
+        const result = await axios.delete(`${server_url}/workout/${workoutId}/exercises/${exerciseId}`, {withCredentials: true} )
+        return result
+        
+    } catch (error) {
+        console.log("Status:",error.response.status, error.response.data);
+        throw error
+        
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Header from '../Components/Header'
-import { CiSquarePlus } from 'react-icons/ci'
+// import { CiSquarePlus } from 'react-icons/ci'
 import { Button, FloatingLabel, Form, Modal } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import { getExerciseByIdAPI } from '../services/userServices';
@@ -20,7 +20,7 @@ function WorkoutLogger() {
 
       const result = await getExerciseByIdAPI(workoutId)
       const exercisesData = result.data.response;
-      console.log(exercisesData);
+      // console.log(exercisesData);
       
       setWorkouts(exercisesData)
 

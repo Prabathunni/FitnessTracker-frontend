@@ -26,7 +26,7 @@ const Footer = () => {
 
 
 
-         <Link style={{ cursor: 'pointer' }}><i className="fa-solid fa-user-tie"></i></Link>
+         <Link to={'/adminlogin'} style={{ cursor: 'pointer' }}><i className="fa-solid fa-user-tie"></i></Link>
 
 
 
