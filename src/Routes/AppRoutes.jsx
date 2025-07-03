@@ -8,46 +8,64 @@ import Profile from '../Pages/Profile'
 import AdminPage from '../Pages/AdminPage'
 import { verifyTokenAPI } from '../services/userServices'
 import { useAuth } from '../contexts/AuthContext'
+import NotFound from '../Components/NotFound'
 
 function AppRoutes() {
-        const { setIsUserLogged } = useAuth();
-    
+    const { isUserLogged, setIsUserLogged } = useAuth();
 
-        useEffect(() => {
-    
-            const checkVerifyToken = async () => {
-                try {
-    
-                    const valid = await verifyTokenAPI()
-                    if (valid) {
-                        setIsUserLogged(true)
-                    } else {
-                        setIsUserLogged(false)
-                    }
-    
-                } catch (error) {
-                    console.log(error.response.data);
+
+    useEffect(() => {
+
+        const checkVerifyToken = async () => {
+            try {
+
+                const valid = await verifyTokenAPI()
+                if (valid) {
+                    setIsUserLogged(true)
+                } else {
                     setIsUserLogged(false)
                 }
-            }   
 
-            checkVerifyToken()
-        }, [])
-    
-    
+            } catch (error) {
+                console.log(error.response.data);
+                setIsUserLogged(false)
+            }
+        }
+
+        checkVerifyToken()
+    }, [])
+
+
 
 
     return (
-        <Routes>
-            <Route element={<LayoutWithFooter />}>
-                <Route path='/' element={<HomePage />} />
-                <Route path='/workout/:id' element={<WorkoutLogger />} />
-                <Route path='/report/:dataName' element={<Report />} />
-                <Route path='/profile' element={<Profile />} />
-            </Route>
+        <>
+            {
+                isUserLogged ?
+                    <Routes>
+                        <Route element={<LayoutWithFooter />}>
+                            <Route path='/' element={<HomePage />} />
+                            <Route path='/workout/:id' element={<WorkoutLogger />} />
+                            <Route path='/report/:dataName' element={<Report />} />
+                            <Route path='/profile' element={<Profile />} />
+                        </Route>
 
-            <Route path='/admin' element={<AdminPage />} />
-        </Routes>
+                        <Route path='/admin' element={<AdminPage />} />
+                    </Routes>
+                    :
+                    <div>
+                        <Routes>
+                            <Route path='*' element={<NotFound />} />
+                            <Route element={<LayoutWithFooter/>}>
+                                <Route path='/' element={<HomePage />} />
+                            </Route>
+                        </Routes>
+
+
+                    </div>
+            }
+
+        </>
     )
 }
 

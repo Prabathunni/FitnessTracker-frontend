@@ -1,16 +1,18 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Dropdown } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import Auth from './Auth'
 import { useAuth } from '../contexts/AuthContext'
-import { logoutUserApi } from '../services/userServices'
+import { getUserDetailsAPI, logoutUserApi } from '../services/userServices'
 
 
 function Header() {
 
   const { isUserLogged, setIsUserLogged } = useAuth()
-  const { showPopUp, setShowPopUp } = useAuth()
+  const { showPopUp } = useAuth()
   const navigate = useNavigate()
+
+  const [name,setName] = useState()
 
 
   const logoutUser = async () => {
@@ -28,6 +30,26 @@ function Header() {
 
   }
 
+
+  const userDetailsFetch = async () => {
+    try {
+      const result = await getUserDetailsAPI()
+      // console.log(result.data);
+      setName(result.data.name)
+      
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
+
+  
+
+
+
+  useEffect(()=>{
+    userDetailsFetch()
+  },[])
 
 
 
@@ -51,7 +73,7 @@ function Header() {
                   width="40"
                   height="40"
                   className="rounded-circle d-none d-md-inline"
-                /><span className='px-1'> Hello Username</span>
+                /><span className='px-1'> Hello {name}</span>
 
             </Dropdown.Toggle>
 

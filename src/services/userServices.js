@@ -301,6 +301,20 @@ export const getWeightByDateAPI = async (jsonDate) => {
 }
 
 
+// get user Details for header
+export const getUserDetailsAPI = async()=>{
+    try {
+        const result = await axios.get(`${server_url}/userfetch`, {withCredentials: true})
+        return result
+        
+    } catch (error) {
+        console.log(error);
+        throw error
+            
+    }
+}
+
+
 
 
 
