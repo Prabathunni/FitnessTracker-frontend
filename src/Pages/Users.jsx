@@ -13,7 +13,7 @@ function Users() {
     const getAllUsers = async () => {
         try {
             const result = await getAllUSersAPI()
-            // console.log(result.data);
+            console.log(result.data);
             setAllUsersData(result.data.response)
 
         } catch (error) {
@@ -49,9 +49,17 @@ function Users() {
                                 (allUserData.map((user) => (
                                     <Link to={`/allusers/${user?._id}`} key={user?._id} className='text-decoration-none shadow'>
                                         <Card border="danger" style={{ width: '18rem', height:'100%' }}>
+                                             {
+                                                user?.status === 'banned' ?
+                                                    <Card.Header className='bg-danger text-white'>Banned</Card.Header>
+                                                    : user?.status === 'inactive' ?
+                                                        <Card.Header className='bg-warning text-dark'>Inactive</Card.Header>
+                                                        : <Card.Header className='bg-success text-white'>Active</Card.Header>
+                                            } 
                                             <Card.Body>
                                                 <Card.Title>username: {user?.name}</Card.Title>
                                                 <Card.Text>email address: {user?.email}</Card.Text>
+                                                {/* <Card.Text>status: {user?.status}</Card.Text> */}
                                             </Card.Body>
                                         </Card>
                                     </Link>

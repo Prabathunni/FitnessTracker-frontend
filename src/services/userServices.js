@@ -457,6 +457,20 @@ export const updateAExerciseAPI = async(workoutId,exerciseId, updatedDate)=>{
     }
 }
 
+// update a exercise by id via workout id
+export const blockUserAPI = async(userId)=>{
+    try {
+
+        const result = await axios.patch(`${server_url}/blockuser`, {userId}, {withCredentials: true} )
+        return result
+        
+    } catch (error) {
+        console.log("Status:",error.response.status, error.response.data);
+        throw error
+        
+    }
+}
+
 
 
 

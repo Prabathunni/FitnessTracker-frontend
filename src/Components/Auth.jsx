@@ -94,7 +94,6 @@ function Auth() {
         // sessionStorage.setItem("userData", result.data.existingUser.name)
         resetForm()
         toast.success("Logging In Please Wait")
-
         setTimeout(() => {
           setIsUserLogged(true)
           setShowPopUp(false)

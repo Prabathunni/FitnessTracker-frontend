@@ -18,8 +18,6 @@ function Header() {
 
   const logoutUser = async () => {
 
-    const isConfirm = confirm("Are you sure to Logout")
-    if (isConfirm) {
       try {
         await logoutUserApi()
         toast.success("Logging Out...")
@@ -31,7 +29,6 @@ function Header() {
       } catch (error) {
         console.log("logging out failed", error);
       }
-    }
 
   }
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import AdminSidePanel from '../Components/AdminSidePanel'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Card } from 'react-bootstrap'
-import { deleteUserByidAPI, getaUSerByIdAPI } from '../services/userServices';
+import { blockUserAPI, deleteUserByidAPI, getaUSerByIdAPI } from '../services/userServices';
 import { toast, ToastContainer } from 'react-toastify';
 
 function ViewUser() {
@@ -45,6 +45,26 @@ function ViewUser() {
     }
 
 
+    const blockuser = async (userID) => {
+
+            try {
+                const result = await blockUserAPI(userID)
+                // console.log(result);
+                // console.log(result.data.response);                  
+                toast.success(result?.data.response)
+                getUserDetails()
+
+
+            } catch (error) {
+                // console.log(error);
+                toast.error(error.response.data.response)
+
+            }
+        
+    }
+
+
+
     useEffect(() => {
         getUserDetails()
     }, [])
@@ -80,7 +100,11 @@ function ViewUser() {
                                 <div className='d-flex justify-content-between'>
                                     <p>Account Created In: <span className='ms-2'> {userData?.createdAt} </span></p>
 
+                                    <div>
+                                    <button onClick={() => blockuser(userData?._id)} className={userData?.status==='active'?'btn btn-warning btn-sm me-2': 'btn btn-success btn-sm me-2'}>{userData?.status==='active'?"Block user":"Unblock User" }<i class="fa-solid fa-user ms-2"></i></button>
                                     <button onClick={() => deleteUser(userData?._id)} className='btn btn-danger btn-sm'>Delete User <i className="fa-solid fa-trash ms-2"></i></button>
+                                    </div>
+
                                 </div>
                             </Card.Footer>
                         </Card>
@@ -90,18 +114,6 @@ function ViewUser() {
                 </div>
             </div>
 
-            <ToastContainer
-                position="top-right"
-                autoClose={2000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick={false}
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="light"
-            />
 
 
         </div>
