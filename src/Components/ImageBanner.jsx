@@ -38,24 +38,26 @@ function ImageBanner() {
 
       <div className="row">
 
-        <div className='hometext col-12 col-lg-6 bg-warning'>
-          <h5 className='mt-2 ms-3 mb-0'>Features</h5>
-
+        <div className='hometext col-12 col-lg-6 bg-warning p-4'>
+          <h5 className='mt-2 ms-3 mb-0'>Key Features</h5>
           <dl>
-            <dt>Workout Logging</dt>
-            <dd>Track your daily workouts, sets, reps, and rest time.</dd>
+            <dt>Calorie Calculator</dt>
+            <dd>Find out your daily calorie needs.</dd>
 
-            <dt>Progress Analytics</dt>
-            <dd>Monitor graphs on the basis of calories intake</dd>
+            <dt>Food Diary</dt>
+            <dd>Log what you eat to track calories.</dd>
 
-            <dt>Goal Setting</dt>
-            <dd>Set your Goals and track your progress</dd>
+            <dt>Health Tracker</dt>
+            <dd>Monitor sleep, water, and weight.</dd>
 
-            <dt>Workout Guide and more</dt>
-            <dd>Workout tutorials, basic instruction on workout and add more workout upload options</dd>
-          </dl>
+            <dt>Workout Library</dt>
+            <dd>Discover workouts for different muscles.</dd>
 
-        </div>
+            <dt>Progress Charts</dt>
+            <dd>See your progress with easy graphs.</dd>
+
+          </dl>       
+         </div>
 
         <div className="poweredBy col-12 col-lg-6 bg-dark text-light hometext d-flex align-items-center justify-content-center">
 
@@ -74,8 +76,8 @@ function ImageBanner() {
 
         </div>
 
-      <hr className="w-100 border-top border-white" />
-      
+        <hr className="w-100 border-top border-white" />
+
       </div>
 
 

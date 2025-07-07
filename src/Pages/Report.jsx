@@ -50,7 +50,7 @@ function Report() {
     try {
       const result = await getAllReportAPI()
       const reportData = result.data.response;
-      // console.log(reportData);
+      console.log(reportData);
 
       if (dataName === 'CALORIE INTAKE') {
 
@@ -196,23 +196,13 @@ function Report() {
           const groupedData = Object.values(group)
           // console.log(groupedData);
 
-
           setDataS1(groupedData)
-
-        } else {
-          toast.warning("No Records Found!")
-        }
-
+        } 
         handleClose()
       }
-
-
     } catch (error) {
-      // console.log(error);
-      if (error.status === 404) {
         toast.error(error.response.data.response)
-      }
-      handleClose()
+        handleClose()
 
     }
 
@@ -250,10 +240,8 @@ function Report() {
           setDataSleepChart(graphData)
 
         }
-
         setDateForAnalyze()
         setShow(false)
-
 
       } else {
         toast.warning("Provide Date for Analyze")
@@ -280,7 +268,6 @@ function Report() {
   const getSleepByLimit = async (limit) => {
 
     try {
-      console.log(limit);
       if (limit) {
         const result = await getSleepByLimitAPI({ limit })
         const sleepDataArray = result.data
@@ -336,9 +323,7 @@ function Report() {
 
       // Bugg found toast not closing **************
     } catch (error) {
-      if (error.response.data.response) {
-        toast.error(error.response.data.response)
-      }
+      toast.error(error.response.data.response)
       handleClose()
 
     }
@@ -1117,21 +1102,6 @@ function Report() {
 
         </Modal.Body>
       </Modal>
-
-
-      <ToastContainer
-        position="top-right"
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick={false}
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
-
 
 
     </div>

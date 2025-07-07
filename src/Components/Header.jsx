@@ -18,17 +18,17 @@ function Header() {
 
   const logoutUser = async () => {
 
-      try {
-        await logoutUserApi()
-        toast.success("Logging Out...")
-        setTimeout(() => {
-          setIsUserLogged(false)
-          navigate('/')
-        }, 2000);
+    try {
+      await logoutUserApi()
+      toast.success("Logging Out...")
+      setTimeout(() => {
+        setIsUserLogged(false)
+        navigate('/')
+      }, 2000);
 
-      } catch (error) {
-        console.log("logging out failed", error);
-      }
+    } catch (error) {
+      console.log("logging out failed", error);
+    }
 
   }
 
@@ -108,6 +108,8 @@ function Header() {
         pauseOnHover
         theme="light"
       />
+
+
 
 
     </div>

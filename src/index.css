@@ -5,7 +5,7 @@ body {
   font-family: "Tomorrow", sans-serif;
   overflow-x: hidden;
   min-height: 100vh;
-  background-color: rgba(20, 21, 34, 0.953);
+  background-color: rgba(16, 14, 14, 0.953);
 }
 
 
@@ -171,4 +171,28 @@ dd {
 
 
 
+/* ---------------for progress card */
+.glass-card {
+  transition: all 0.3s ease;
+}
+.glass-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+.glass-btn {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  border-radius: 50px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.glass-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 114, 255, 0.4);
+  color: #fff;
+}
 

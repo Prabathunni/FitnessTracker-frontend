@@ -85,13 +85,14 @@ function UpdatePopUp({ reportName, onUpdateSuccess }) {
             if (sleepDateEntries) {
                 const result = await addSleepAPI(sleepDateEntries)
                 // console.log(result);
-                toast.success(result.data.response);
+                toast.success(result?.data.response);
                 setSleepDataEntries(),
-                    setDate()
+                setDate()
                 setDurationInHr()
+                setTimeout(() => {
                 setShowUpdatePopUp(false)
+                }, 1000);
                 onUpdateSuccess?.();
-
             }
 
         } catch (error) {
@@ -278,7 +279,7 @@ function UpdatePopUp({ reportName, onUpdateSuccess }) {
 
       <ToastContainer
         position="top-right"
-        autoClose={2000}
+        autoClose={1000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick={false}

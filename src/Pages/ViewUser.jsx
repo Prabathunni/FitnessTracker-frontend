@@ -3,7 +3,7 @@ import AdminSidePanel from '../Components/AdminSidePanel'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Card } from 'react-bootstrap'
 import { blockUserAPI, deleteUserByidAPI, getaUSerByIdAPI } from '../services/userServices';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 function ViewUser() {
 
@@ -23,7 +23,7 @@ function ViewUser() {
 
         }
     }
-    console.log(userData);
+    // console.log(userData);
 
 
     const deleteUser = async (userID) => {
@@ -53,14 +53,10 @@ function ViewUser() {
                 // console.log(result.data.response);                  
                 toast.success(result?.data.response)
                 getUserDetails()
-
-
             } catch (error) {
                 // console.log(error);
                 toast.error(error.response.data.response)
-
             }
-        
     }
 
 
@@ -68,7 +64,6 @@ function ViewUser() {
     useEffect(() => {
         getUserDetails()
     }, [])
-
 
     return (
         <div className='bg-light' style={{ minHeight: "100vh" }}>

@@ -471,6 +471,20 @@ export const blockUserAPI = async(userId)=>{
     }
 }
 
+// update userDatails
+export const updateUserAPI = async(userData)=>{
+    try {
+
+        const result = await axios.patch(`${server_url}/updateuser`, userData, {withCredentials: true} )
+        return result
+        
+    } catch (error) {
+        console.log("Status:",error.response.status, error.response.data);
+        throw error
+        
+    }
+}
+
 
 
 
